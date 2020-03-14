@@ -1,0 +1,47 @@
+@import "../vars";
+
+.playlists {
+  height: 100%;
+  overflow-y: scroll;
+  color: white;
+}
+
+.playlist {
+  display: grid;
+  font-size: 0.8em;
+  grid-template-columns:
+    $playlist-item-height calc(100% - #{$playlist-item-height * 3})
+    $playlist-item-height * 2;
+  grid-template-rows: $playlist-item-height;
+  grid-template-areas: "playlistimg playlistname playlisttracks";
+  background-color: #48515f;
+  &:nth-child(even) {
+    background-color: #373e49;
+  }
+  &:hover {
+    cursor: pointer;
+    & > .playlist-name {
+      text-decoration: underline;
+    }
+  }
+}
+.playlist-img {
+  grid-area: playlistimg;
+  img {
+    height: $playlist-item-height;
+    width: $playlist-item-height;
+  }
+}
+.playlist-name {
+  grid-area: playlistname;
+  padding-left: 16px;
+  align-self: center;
+}
+.playlist-tracks {
+  grid-area: playlisttracks;
+  font-size: 0.75em;
+  opacity: 0.6;
+  text-align: right;
+  padding-right: 16px;
+  align-self: center;
+}
