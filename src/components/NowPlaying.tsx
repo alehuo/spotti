@@ -1,8 +1,12 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState, useEffect, useCallback } from "react";
 import "./NowPlaying.scss";
+import { getCurrentlyPlaying } from "../services/PlaybackService";
 interface Props {
   token: string;
+}
+
+interface Artist {
+  name: string;
 }
 
 interface AlbumImage {
@@ -11,9 +15,6 @@ interface AlbumImage {
   width: number;
 }
 
-interface Artist {
-  name: string;
-}
 interface SongData {
   name: string;
   progressMs: number;
@@ -41,47 +42,27 @@ export const NowPlaying: React.FC<Props> = ({ token }) => {
     durationMs: 0,
     isPlaying: false
   });
-  useEffect(() => {
-    axios
-      .get("https://api.spotify.com/v1/me/player/currently-playing", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      .then(res => {
-        setAlbumImages([...res.data.item.album.images]);
-        setArtists(res.data.item.artists);
-        setSongData({
-          name: res.data.item.name,
-          progressMs: res.data.progress_ms,
-          durationMs: res.data.item.duration_ms,
-          isPlaying: res.data.is_playing
-        });
+  const getCurrPlaying = useCallback(access_token => {
+    getCurrentlyPlaying(access_token).then(res => {
+      setAlbumImages([...res.item.album.images]);
+      setArtists(res.item.artists);
+      setSongData({
+        name: res.item.name,
+        progressMs: res.progress_ms,
+        durationMs: res.item.duration_ms,
+        isPlaying: res.is_playing
       });
-  }, [token]);
+    });
+  }, []);
   useEffect(() => {
-    const interval = setInterval(() => {
-      axios
-        .get("https://api.spotify.com/v1/me/player/currently-playing", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        })
-        .then(res => {
-          setAlbumImages([...res.data.item.album.images]);
-          setArtists(res.data.item.artists);
-          setSongData({
-            name: res.data.item.name,
-            progressMs: res.data.progress_ms,
-            durationMs: res.data.item.duration_ms,
-            isPlaying: res.data.is_playing
-          });
-        });
-    }, 1000 * 5);
+    getCurrPlaying(token);
+  }, [getCurrPlaying, token]);
+  useEffect(() => {
+    const interval = setInterval(() => getCurrPlaying(token), 1000 * 10);
     return () => {
       clearInterval(interval);
     };
-  }, [token]);
+  }, [getCurrPlaying, token]);
   useEffect(() => {
     const interval = setInterval(() => {
       if (
