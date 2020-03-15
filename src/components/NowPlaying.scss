@@ -1,6 +1,7 @@
 @import "../vars";
 
 .now-playing {
+  grid-area: nowplaying;
   width: 100%;
   height: 100%;
   display: grid;
@@ -29,11 +30,12 @@
   width: 100%;
   display: grid;
   font-size: 0.8em;
-  grid-template-rows: 36px 98px auto;
+  grid-template-rows: 36px 60px 48px auto;
   grid-template-columns: $ms-width calc(100% - #{$ms-width * 2}) $ms-width;
   grid-template-areas:
     "songname songname songname"
     "artist artist artist"
+    "playbackctrl playbackctrl playbackctrl"
     "currentms progressbar durationms";
 }
 .song-artist {
@@ -78,5 +80,10 @@ progress[value]::-webkit-progress-bar {
 .song-progress-durationms {
   text-align: left;
   grid-area: durationms;
+  align-self: center;
+}
+.playback-controls {
+  padding-left: 16px;
+  grid-area: playbackctrl;
   align-self: center;
 }

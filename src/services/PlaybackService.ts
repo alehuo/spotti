@@ -124,9 +124,29 @@ export const startPlaying = async (token: string, contextUri: string) => {
   );
 };
 
+export const startPlayingTrack = async (
+  token: string,
+  trackContextUri: string
+) => {
+  await customAxios(token).put(
+    "https://api.spotify.com/v1/me/player/play",
+    {
+      uris: [trackContextUri]
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+  );
+};
+
 export const getCurrentlyPlaying = async (token: string) => {
   const res = await customAxios(token).get<RootObject>(
     "https://api.spotify.com/v1/me/player/currently-playing"
   );
+  if (res.status === 204) {
+    return null;
+  }
   return res.data;
 };

@@ -4,9 +4,13 @@
   width: 100%;
   height: 100%;
   display: grid;
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: $now-playing-height calc(
       #{$app-height} - #{$now-playing-height}
     );
+  grid-template-areas:
+    "nowplaying queue"
+    "playlist search";
 }
 
 .authorize-link {

@@ -1,0 +1,80 @@
+.search {
+  grid-area: search;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 60px calc(100% - 60px);
+}
+
+.search-bar {
+  height: 60px;
+  width: 100%;
+}
+
+.search-term {
+  padding: 8px;
+  display: block;
+  height: 95%;
+  width: 95%;
+  align-self: center;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: transparent;
+  border: 0;
+  border-bottom: 2px solid white;
+  font-size: 0.7em;
+  color: white;
+}
+
+.search-results {
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+}
+
+.search-result-amount {
+  font-weight: bold;
+  font-size: 0.7em;
+  padding-left: 16px;
+  height: 24px;
+  color: white;
+  width: 100%;
+}
+
+.search-result {
+  height: 64px;
+  color: white;
+  width: 100%;
+  display: grid;
+  grid-template-rows: 0.8fr 1.2fr;
+  grid-template-columns: 64px auto 64px;
+  font-size: 0.6em;
+  background-color: #48515f;
+  &:nth-child(even) {
+    background-color: #373e49;
+  }
+  grid-template-areas:
+    "trackimage trackname options"
+    "trackimage artist options";
+
+  .search-result-img {
+    grid-area: trackimage;
+  }
+  .track {
+    grid-area: trackname;
+    padding-left: 8px;
+    align-self: center;
+  }
+  .artist {
+    grid-area: artist;
+    font-weight: bold;
+    padding-left: 8px;
+    align-self: start;
+  }
+  .options {
+    grid-area: options;
+    align-self: center;
+    text-align: center;
+  }
+}

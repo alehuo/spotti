@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "./NowPlaying.scss";
 import { getCurrentlyPlaying } from "../services/PlaybackService";
+import { Player } from "./Player";
 interface Props {
   token: string;
 }
@@ -44,14 +45,16 @@ export const NowPlaying: React.FC<Props> = ({ token }) => {
   });
   const getCurrPlaying = useCallback(access_token => {
     getCurrentlyPlaying(access_token).then(res => {
-      setAlbumImages([...res.item.album.images]);
-      setArtists(res.item.artists);
-      setSongData({
-        name: res.item.name,
-        progressMs: res.progress_ms,
-        durationMs: res.item.duration_ms,
-        isPlaying: res.is_playing
-      });
+      if (res != null) {
+        setAlbumImages([...res.item.album.images]);
+        setArtists(res.item.artists);
+        setSongData({
+          name: res.item.name,
+          progressMs: res.progress_ms,
+          durationMs: res.item.duration_ms,
+          isPlaying: res.is_playing
+        });
+      }
     });
   }, []);
   useEffect(() => {
@@ -89,6 +92,9 @@ export const NowPlaying: React.FC<Props> = ({ token }) => {
           <b>{artists.map(artist => artist.name).join(", ")}</b>
         </div>
         <div className="song-name">{songData.name}</div>
+        <div className="playback-controls">
+          <Player token={token} />
+        </div>
         <div className="song-progress-currentms">
           {<MillisToMinutesAndSeconds value={songData.progressMs} />}
         </div>

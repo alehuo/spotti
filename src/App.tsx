@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import queryString from "query-string";
 import "./App.scss";
-import { Player } from "./components/Player";
 import { NowPlaying } from "./components/NowPlaying";
 import { Playlists } from "./components/Playlists";
+import { Queue } from "./components/Queue";
+import { Search } from "./components/Search";
 
 const authUrl = "https://accounts.spotify.com/authorize";
 const query = queryString.stringify(
@@ -47,7 +48,8 @@ const App = () => {
         <>
           <NowPlaying token={token} />
           <Playlists token={token} />
-          <Player token={token} />
+          <Queue token={token} />
+          <Search token={token} />
         </>
       )}
     </div>

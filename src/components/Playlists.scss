@@ -1,6 +1,7 @@
 @import "../vars";
 
 .playlists {
+  grid-area: playlist;
   height: 100%;
   overflow-y: scroll;
   color: white;
