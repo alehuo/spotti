@@ -46,8 +46,8 @@
   color: white;
   width: 100%;
   display: grid;
-  grid-template-rows: 0.8fr 1.2fr;
-  grid-template-columns: 64px auto 64px;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 64px auto 128px;
   font-size: 0.6em;
   background-color: #48515f;
   &:nth-child(even) {
@@ -58,7 +58,9 @@
     "trackimage artist options";
 
   .search-result-img {
+    height: 64px;
     grid-area: trackimage;
+    align-self: center;
   }
   .track {
     grid-area: trackname;

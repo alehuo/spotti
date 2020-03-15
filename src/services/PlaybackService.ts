@@ -162,3 +162,35 @@ export const addToQueue = async (token: string, trackUri: string) => {
     }
   );
 };
+
+export const changeVolume = async (
+  token: string,
+  volume_percent: number,
+  device_id: string
+) => {
+  const res1 = await customAxios(token).put(
+    "https://api.spotify.com/v1/me/player/volume",
+    null,
+    {
+      params: {
+        device_id,
+        volume_percent
+      }
+    }
+  );
+  if (res1.status !== 204) {
+    throw new Error(`Volume change failed with status code ${res1.status}`);
+  }
+  await new Promise(resolve => setTimeout(resolve, 2000));
+  const res2 = await customAxios(token).get(
+    "https://api.spotify.com/v1/me/player"
+  );
+  if (res2.data.device === undefined) {
+    throw new Error("Device is not defined");
+  }
+  if (res2.data.device.volume_percent !== volume_percent) {
+    throw new Error(
+      `Volume was not changed properly. Requested ${volume_percent}, was ${res2.data.device.volume_percent}`
+    );
+  }
+};

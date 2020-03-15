@@ -2,27 +2,38 @@ import React, { useCallback, useEffect, useState } from "react";
 import { setActiveDevice } from "../services/DeviceService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlayCircle, faPauseCircle } from "@fortawesome/free-solid-svg-icons";
+import { debounce } from "lodash";
 import "./Player.scss";
+import { changeVolume } from "../services/PlaybackService";
 
 interface Props {
   token: string;
 }
 
+const debouncedVolumeChange = debounce(
+  (token: string, volume: number, deviceId: string) => {
+    console.log("Called");
+    changeVolume(token, volume, deviceId).catch(err => console.error(err));
+  },
+  700,
+  {
+    leading: false,
+    trailing: true
+  }
+);
+
 export const Player: React.FC<Props> = ({ token }) => {
   const [player, setPlayer] = useState<any>(null);
+  const [volume, setVolume] = useState(50);
   const [connected, setConnected] = useState(false);
   const [deviceId, setDeviceId] = useState("");
   const [playing, setPlaying] = useState<"playing" | "paused">("paused");
   const initClient = useCallback(() => {
-    console.log("Spotify SDK ready");
     // @ts-ignore
     const player = new Spotify.Player({
-      name: "Spotify Web Player (alehuo)",
+      name: "Spotify Web Player",
       getOAuthToken: (cb: (token: string) => void) => {
         cb(token);
-      },
-      onPlayerStateChanged: (playerState: any) => {
-        console.log("Player state changed:", playerState);
       },
       volume: 0.5
     });
@@ -58,13 +69,20 @@ export const Player: React.FC<Props> = ({ token }) => {
       setDeviceId("");
     };
   }, [token]);
+
+  // Set the active device
   useEffect(() => {
-    if (deviceId !== "") {
-      setActiveDevice(token, deviceId);
+    async function activeDeviceHandler() {
+      if (deviceId !== "") {
+        await setActiveDevice(token, deviceId);
+      }
     }
+    activeDeviceHandler();
   }, [deviceId, token]);
+
   // @ts-ignore
   window.onSpotifyWebPlaybackSDKReady = initClient;
+  // Inject script
   useEffect(() => {
     // @ts-ignore
     if (!window.Spotify) {
@@ -73,29 +91,48 @@ export const Player: React.FC<Props> = ({ token }) => {
       document.head.appendChild(scriptTag);
     }
   }, []);
-  const pause = useCallback(() => {
-    setPlaying("paused");
-    player.pause();
-  }, [player]);
-  const play = useCallback(() => {
-    setPlaying("playing");
-    player.resume();
-  }, [player]);
-  if (player == null) {
-    return <div />;
+
+  const changePlayingState = useCallback(
+    (playingState: "paused" | "playing") => {
+      player.pause().then(() => {
+        setPlaying(playingState);
+      });
+    },
+    [player]
+  );
+
+  const handleVolumeChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      e.preventDefault();
+      setVolume(Number(e.target.value));
+      debouncedVolumeChange(token, Number(e.target.value), deviceId);
+    },
+    [deviceId, token]
+  );
+
+  if (player == null || !connected || deviceId === "") {
+    return <div>Loading player...</div>;
   }
   return (
     <div className="player">
-      {playing === "paused" && connected && (
-        <button className="btn" onClick={() => play()}>
+      {playing === "paused" && (
+        <button className="btn" onClick={() => changePlayingState("playing")}>
           <FontAwesomeIcon icon={faPlayCircle} />
         </button>
       )}
-      {playing === "playing" && connected && (
-        <button className="btn" onClick={() => pause()}>
+      {playing === "playing" && (
+        <button className="btn" onClick={() => changePlayingState("paused")}>
           <FontAwesomeIcon icon={faPauseCircle} />
         </button>
       )}
+      <input
+        type="range"
+        step="1"
+        min="0"
+        max="100"
+        value={volume}
+        onChange={handleVolumeChange}
+      />
     </div>
   );
 };

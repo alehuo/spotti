@@ -21,19 +21,12 @@ const url = `${authUrl}?${query}`;
 const App = () => {
   const [token, setToken] = useState("");
   useEffect(() => {
-    const token = localStorage.getItem("spotify_token");
-    if (token !== null) {
-      setToken(token);
-    } else {
-      const qry = queryString.parse(window.location.hash.substring(1));
-      window.location.hash = "";
-      let _token = qry.access_token;
-      if (_token) {
-        if (!Array.isArray(_token)) {
-          // Set token
-          localStorage.setItem("spotify_token", _token);
-          setToken(_token);
-        }
+    const qry = queryString.parse(window.location.hash.substring(1));
+    window.location.hash = "";
+    let _token = qry.access_token;
+    if (_token) {
+      if (!Array.isArray(_token)) {
+        setToken(_token);
       }
     }
   }, []);

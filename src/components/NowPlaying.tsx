@@ -38,7 +38,7 @@ export const NowPlaying: React.FC<Props> = ({ token }) => {
   const [albumImages, setAlbumImages] = useState<AlbumImage[]>([]);
   const [artists, setArtists] = useState<Artist[]>([]);
   const [songData, setSongData] = useState<SongData>({
-    name: "",
+    name: "-",
     progressMs: 0,
     durationMs: 0,
     isPlaying: false
