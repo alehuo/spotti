@@ -3,8 +3,18 @@
 .playlists {
   grid-area: playlist;
   height: 100%;
-  overflow-y: scroll;
   color: white;
+}
+
+.playlists-bar {
+  padding: 8px;
+  height: 48px;
+  width: 100%;
+}
+
+.playlist-results {
+  height: calc(100% - 48px);
+  overflow-y: scroll;
 }
 
 .playlist {

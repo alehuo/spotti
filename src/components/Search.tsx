@@ -40,7 +40,7 @@ export const Search: React.FC<Props> = ({ token }) => {
           type="text"
           name="search-term"
           className="search-term"
-          placeholder="Search for tracks.."
+          placeholder="Search.."
           onChange={e => {
             e.preventDefault();
             debouncedSearch(e.target.value);

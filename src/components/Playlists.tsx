@@ -20,23 +20,26 @@ export const Playlists: React.FC<Props> = ({ token }) => {
   }, [token]);
   return (
     <div className="playlists">
-      {playlists.map(playlist => (
-        <div
-          className="playlist"
-          key={playlist.id}
-          onClick={() => startPlaylist(playlist.id)}
-        >
-          <div className="playlist-img">
-            <img src={playlist.images[0]?.url} alt="" />
+      <div className="playlists-bar">Your playlists</div>
+      <div className="playlist-results">
+        {playlists.map(playlist => (
+          <div
+            className="playlist"
+            key={playlist.id}
+            onClick={() => startPlaylist(playlist.id)}
+          >
+            <div className="playlist-img">
+              <img src={playlist.images[0]?.url} alt="" />
+            </div>
+            <span className="playlist-name">{playlist.name}</span>{" "}
+            <span className="playlist-tracks">
+              {playlist.tracks.total === 1
+                ? "1 track"
+                : playlist.tracks.total + " tracks"}
+            </span>
           </div>
-          <span className="playlist-name">{playlist.name}</span>{" "}
-          <span className="playlist-tracks">
-            {playlist.tracks.total === 1
-              ? "1 track"
-              : playlist.tracks.total + " tracks"}
-          </span>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
