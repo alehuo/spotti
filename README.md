@@ -9,7 +9,7 @@ This repository contains a Spotify Web Dashboard implementation, built with Reac
 - View the current track information
 - Search for tracks
 - Play your own public & private playlists
-- Play / pause playback
+- Return / pause playback
 - Play music through Spotify Web Playback SDK (audio streams to web browser)
 
 ## Installation instructions
