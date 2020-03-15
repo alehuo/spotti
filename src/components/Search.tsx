@@ -12,6 +12,7 @@ interface Props {
 
 export const Search: React.FC<Props> = ({ token }) => {
   const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchText, setSearchText] = useState("");
   const [searchResultsCount, setSearchResultCount] = useState(0);
   const searchForTracks = useCallback(
     searchTerm => {
@@ -38,57 +39,72 @@ export const Search: React.FC<Props> = ({ token }) => {
     },
     [token]
   );
-  const debouncedSearch = debounce(searchForTracks, 800, { maxWait: 1000 });
+  const debouncedSearch = useCallback(
+    debounce(searchForTracks, 800, { maxWait: 1000 }),
+    []
+  );
   return (
     <div className="search">
+      <div className="search-title">Search for tracks</div>
       <div className="search-bar">
         <input
           type="text"
           name="search-term"
           className="search-term"
           placeholder="Search.."
+          value={searchText}
           onChange={e => {
             e.preventDefault();
-            debouncedSearch(e.target.value);
+            setSearchText(e.target.value);
+            if (e.target.value === "") {
+              debouncedSearch.cancel();
+              setSearchResults([]);
+              setSearchResultCount(0);
+            } else {
+              debouncedSearch(e.target.value);
+            }
           }}
         />
       </div>
       <div className="search-results">
-        {searchResults && searchResults.length > 0 && (
+        {searchText !== "" && searchResults && searchResults.length > 0 && (
           <div className="search-result-amount">
             {searchResultsCount} result(s)
           </div>
         )}
         <div>
-          {searchResults.map(searchRes => (
-            <div className="search-result" key={searchRes.id}>
-              <div className="search-result-img">
-                <img
-                  src={
-                    searchRes.album.images.find(
-                      (image: any) => image.height === 64
-                    )?.url
-                  }
-                  alt=""
-                />
+          {searchText !== "" &&
+            searchResults.map(searchRes => (
+              <div className="search-result" key={searchRes.id}>
+                <div className="search-result-img">
+                  <img
+                    src={
+                      searchRes.album.images.find(
+                        (image: any) => image.height === 64
+                      )?.url
+                    }
+                    alt=""
+                  />
+                </div>
+                <div className="track">{searchRes.name}</div>
+                <div className="artist">
+                  {searchRes.artists
+                    .map((artist: any) => artist.name)
+                    .join(", ")}
+                </div>
+                <div className="options">
+                  <button
+                    className="btn"
+                    onClick={() => playTrack(searchRes.uri)}
+                  >
+                    <FontAwesomeIcon icon={faPlay} />
+                  </button>
+                  <button className="btn" onClick={() => que(searchRes.uri)}>
+                    <FontAwesomeIcon icon={faPlusCircle} />
+                  </button>
+                </div>
               </div>
-              <div className="track">{searchRes.name}</div>
-              <div className="artist">
-                {searchRes.artists.map((artist: any) => artist.name).join(", ")}
-              </div>
-              <div className="options">
-                <button
-                  className="btn"
-                  onClick={() => playTrack(searchRes.uri)}
-                >
-                  <FontAwesomeIcon icon={faPlay} />
-                </button>
-                <button className="btn" onClick={() => que(searchRes.uri)}>
-                  <FontAwesomeIcon icon={faPlusCircle} />
-                </button>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     </div>

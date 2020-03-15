@@ -1,11 +1,17 @@
 .search {
+  padding: 16px;
   color: white;
   grid-area: search;
   width: 100%;
   height: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 48px calc(100% - 48px);
+  grid-template-rows: 48px 56px calc(100% - 48px - 56px);
+}
+
+.search-title {
+  height: 48px;
+  width: 100%;
 }
 
 .search-bar {
@@ -16,8 +22,8 @@
 .search-term {
   padding: 8px;
   display: block;
-  height: 95%;
-  width: 100%;
+  height: 100%;
+  width: 60%;
   align-self: center;
   background-color: transparent;
   border: 0;

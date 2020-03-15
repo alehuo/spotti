@@ -94,9 +94,15 @@ export const Player: React.FC<Props> = ({ token }) => {
 
   const changePlayingState = useCallback(
     (playingState: "paused" | "playing") => {
-      player.pause().then(() => {
-        setPlaying(playingState);
-      });
+      if (playingState === "playing") {
+        player.resume().then(() => {
+          setPlaying(playingState);
+        });
+      } else {
+        player.pause().then(() => {
+          setPlaying(playingState);
+        });
+      }
     },
     [player]
   );

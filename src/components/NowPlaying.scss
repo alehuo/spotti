@@ -1,13 +1,12 @@
 @import "../vars";
 
 .now-playing {
+  padding: 16px;
   grid-area: nowplaying;
   width: 100%;
   height: 100%;
   display: grid;
-  grid-template-columns: $image-width calc(
-      #{$now-playing-width} - #{$image-width}
-    );
+  grid-template-columns: $image-width 1fr;
   grid-template-rows: $image-height 1fr 1fr;
   grid-template-areas:
     "albumart songdata"

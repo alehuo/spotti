@@ -1,0 +1,14 @@
+.queue {
+  padding: 16px;
+  width: 100%;
+  height: 100%;
+  color: white;
+}
+.queue-title {
+  height: 48px;
+}
+.queue-contents {
+  width: 100%;
+  height: calc(100% - 48px);
+  font-size: 0.8em;
+}
