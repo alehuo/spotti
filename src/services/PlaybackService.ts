@@ -150,3 +150,15 @@ export const getCurrentlyPlaying = async (token: string) => {
   }
   return res.data;
 };
+
+export const addToQueue = async (token: string, trackUri: string) => {
+  await customAxios(token).post(
+    "https://api.spotify.com/v1/me/player/queue",
+    null,
+    {
+      params: {
+        uri: trackUri
+      }
+    }
+  );
+};

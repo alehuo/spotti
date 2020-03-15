@@ -3,8 +3,8 @@ import { search } from "../services/SearchService";
 import "./Search.scss";
 import { debounce } from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
-import { startPlayingTrack } from "../services/PlaybackService";
+import { faPlay, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { startPlayingTrack, addToQueue } from "../services/PlaybackService";
 
 interface Props {
   token: string;
@@ -29,6 +29,12 @@ export const Search: React.FC<Props> = ({ token }) => {
   const playTrack = useCallback(
     trackId => {
       startPlayingTrack(token, trackId);
+    },
+    [token]
+  );
+  const que = useCallback(
+    trackId => {
+      addToQueue(token, trackId);
     },
     [token]
   );
@@ -76,6 +82,9 @@ export const Search: React.FC<Props> = ({ token }) => {
                   onClick={() => playTrack(searchRes.uri)}
                 >
                   <FontAwesomeIcon icon={faPlay} />
+                </button>
+                <button className="btn" onClick={() => que(searchRes.uri)}>
+                  <FontAwesomeIcon icon={faPlusCircle} />
                 </button>
               </div>
             </div>
