@@ -2,8 +2,12 @@ import React, { useState, useEffect, useCallback } from "react";
 import "./NowPlaying.scss";
 import { getCurrentlyPlaying } from "../services/PlaybackService";
 import { Player } from "./Player";
+// @ts-ignore
+import ColorThief from "colorthief";
 interface Props {
   token: string;
+  imgRef: React.Ref<HTMLImageElement>;
+  handleBgColor: any;
 }
 
 interface Artist {
@@ -34,7 +38,7 @@ const MillisToMinutesAndSeconds: React.FC<{ value: number }> = ({ value }) => {
   );
 };
 
-export const NowPlaying: React.FC<Props> = ({ token }) => {
+export const NowPlaying: React.FC<Props> = ({ token, imgRef, handleBgColor }) => {
   const [albumImages, setAlbumImages] = useState<AlbumImage[]>([]);
   const [artists, setArtists] = useState<Artist[]>([]);
   const [songData, setSongData] = useState<SongData>({
@@ -84,7 +88,19 @@ export const NowPlaying: React.FC<Props> = ({ token }) => {
       <div className="album-art">
         <img
           src={albumImages?.filter(image => image?.height === 300)[0]?.url}
-          alt=""
+          ref={imgRef}
+          crossOrigin="anonymous"
+          alt="Album art"
+          onLoad={() => {
+            // @ts-ignore
+            if (imgRef !== null && imgRef.current !== null) {
+              console.log(imgRef);
+              const colorThief = new ColorThief();
+              // @ts-ignore
+              const color = colorThief.getColor(imgRef.current);
+              handleBgColor(`rgb(${color[0]},${color[1]},${color[2]})`);
+            }
+          }}
         />
       </div>
       <div className="song-data">

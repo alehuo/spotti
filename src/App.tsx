@@ -17,9 +17,12 @@ const query = queryString.stringify(
   { arrayFormat: "bracket" }
 );
 const url = `${authUrl}?${query}`;
+const imgRef = React.createRef<HTMLImageElement>();
 
 const App = () => {
+  
   const [token, setToken] = useState("");
+  const [bgColor, setBgColor] = useState("#282c34");
   useEffect(() => {
     const qry = queryString.parse(window.location.hash.substring(1));
     window.location.hash = "";
@@ -32,14 +35,16 @@ const App = () => {
   }, []);
 
   return (
-    <div className="App">
+    <div className="App" style={{
+      backgroundColor: bgColor
+    }}>
       {token === "" ? (
         <a href={url} className="authorize-link">
           Authorize Spotify
         </a>
       ) : (
         <>
-          <NowPlaying token={token} />
+          <NowPlaying token={token} imgRef={imgRef} handleBgColor={setBgColor}/>
           <Playlists token={token} />
           <Queue token={token} />
           <Search token={token} />

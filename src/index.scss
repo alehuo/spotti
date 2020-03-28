@@ -1,4 +1,6 @@
 @import "./vars";
+@import "./mixins";
+
 * {
   box-sizing: border-box;
 }
@@ -15,7 +17,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #282c34;
   font-size: calc(10px + 2vmin);
   height: $app-height;
   width: $app-width;
@@ -33,7 +34,7 @@ code {
 
 .btn {
   background-color: transparent;
-  color: white;
+  @include blend();
   border: 0;
   font-size: 1.6em;
   &:hover {

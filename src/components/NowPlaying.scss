@@ -1,4 +1,5 @@
 @import "../vars";
+@import "../mixins";
 
 .now-playing {
   padding: 16px;
@@ -12,12 +13,11 @@
     "albumart songdata"
     "albumart songdata"
     "albumart songdata";
-  background-color: #282c34;
-  color: white;
 }
 .album-art {
   text-align: left;
   grid-area: albumart;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   img {
     width: $image-width;
     height: $image-height;
@@ -25,6 +25,7 @@
 }
 
 .song-data {
+  @include blend();
   grid-area: songdata;
   width: 100%;
   display: grid;

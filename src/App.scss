@@ -1,6 +1,8 @@
 @import "./vars";
+@import "./mixins";
 
 .App {
+  transition: background-color 4s cubic-bezier(0.4, 0.0, 0.2, 1);
   box-sizing: border-box;
   width: $app-width;
   height: $app-height;
@@ -17,6 +19,6 @@
 
 .authorize-link {
   padding: 16px;
-  color: white;
+  @include blend;
   text-decoration: none;
 }
