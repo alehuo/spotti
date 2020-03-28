@@ -5,7 +5,7 @@ interface Props {
   token: string;
 }
 
-export const Queue: React.FC<Props> = ({ token }) => (
+export const Queue: React.FC<Props> = ({ token: _token }) => (
   <div className="queue">
     <div className="queue-title">Current queue</div>
     <div className="queue-contents">
