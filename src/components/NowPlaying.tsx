@@ -97,7 +97,7 @@ export const NowPlaying: React.FC<Props> = ({ token, imgRef, handleBgColor }) =>
               console.log(imgRef);
               const colorThief = new ColorThief();
               // @ts-ignore
-              const color = colorThief.getColor(imgRef.current);
+              const color = colorThief.getColor(imgRef.current, 50);
               handleBgColor(`rgb(${color[0]},${color[1]},${color[2]})`);
             }
           }}
