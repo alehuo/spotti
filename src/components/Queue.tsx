@@ -10,7 +10,7 @@ export const Queue: React.FC<Props> = ({ token }) => (
     <div className="queue-title">Current queue</div>
     <div className="queue-contents">
       <ol>
-        {[...Array(10)].map((elem, i) => (
+        {[...Array(10)].map((_elem, i) => (
           <li key={i}>Hello world</li>
         ))}
       </ol>
