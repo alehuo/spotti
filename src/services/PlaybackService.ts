@@ -110,8 +110,11 @@ interface RootObject {
   is_playing: boolean;
 }
 
-export const startPlaying = async (token: string, contextUri: string) => {
-  await customAxios(token).put(
+export const startPlayingPlaylist = async (
+  token: string,
+  contextUri: string
+) => {
+  const res = await customAxios(token).put(
     "https://api.spotify.com/v1/me/player/play",
     {
       context_uri: contextUri
@@ -122,13 +125,14 @@ export const startPlaying = async (token: string, contextUri: string) => {
       }
     }
   );
+  return res;
 };
 
 export const startPlayingTrack = async (
   token: string,
   trackContextUri: string
 ) => {
-  await customAxios(token).put(
+  const res = await customAxios(token).put(
     "https://api.spotify.com/v1/me/player/play",
     {
       uris: [trackContextUri]
@@ -139,6 +143,7 @@ export const startPlayingTrack = async (
       }
     }
   );
+  return res;
 };
 
 export const getCurrentlyPlaying = async (token: string) => {
@@ -161,6 +166,31 @@ export const addToQueue = async (token: string, trackUri: string) => {
       }
     }
   );
+};
+export const pausePlayback = async (token: string, device_id: string) => {
+  const res = await customAxios(token).put(
+    "https://api.spotify.com/v1/me/player/pause",
+    null,
+    {
+      params: {
+        device_id
+      }
+    }
+  );
+  return res;
+};
+
+export const continuePlayback = async (token: string, device_id: string) => {
+  const res = await customAxios(token).put(
+    "https://api.spotify.com/v1/me/player/play",
+    null,
+    {
+      params: {
+        device_id
+      }
+    }
+  );
+  return res;
 };
 
 export const changeVolume = async (

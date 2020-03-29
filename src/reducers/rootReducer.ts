@@ -1,12 +1,14 @@
 import { playerReducer } from "./playerReducer";
 import { authReducer } from "./authReducer";
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
+import { createEpicMiddleware } from "redux-observable";
 import { StateType } from "typesafe-actions";
 import { uiReducer } from "./uiReducer";
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 import { playlistReducer } from "./playlistReducer";
 import { queueReducer } from "./queueReducer";
+import { rootEpic } from "../epics/rootEpic";
 
 export type Reducer<T, K> = (state: T, action: K) => T;
 
@@ -22,7 +24,14 @@ const rootReducer = combineReducers(rootReducerObj);
 
 export type RootState = StateType<typeof rootReducer>;
 
-const composeEnhancers = composeWithDevTools();
-export const store = createStore(rootReducer, composeEnhancers);
+const epicMiddleware = createEpicMiddleware();
+
+export const store = createStore(
+  rootReducer,
+  composeWithDevTools(applyMiddleware(epicMiddleware))
+);
 export type AppDispatch = typeof store.dispatch;
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
+
+// @ts-ignore
+epicMiddleware.run(rootEpic);

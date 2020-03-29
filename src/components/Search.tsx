@@ -3,15 +3,13 @@ import { search, Item } from "../services/SearchService";
 import { debounce } from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
-import {
-  startPlayingTrack,
-  addToQueue as addToQueue_api
-} from "../services/PlaybackService";
+import { addToQueue as addToQueue_api } from "../services/PlaybackService";
 import { useTypedSelector, AppDispatch } from "../reducers/rootReducer";
 import { Button } from "./ui/Button";
 import { useDispatch } from "react-redux";
 import { addToQueue } from "../reducers/queueReducer";
 import styled from "styled-components";
+import { playSong } from "../reducers/playerReducer";
 
 const SearchWrapper = styled.div`
   padding: 16px;
@@ -123,12 +121,6 @@ export const Search: React.FC = () => {
     },
     [token]
   );
-  const playTrack = useCallback(
-    trackId => {
-      startPlayingTrack(token, trackId);
-    },
-    [token]
-  );
   const que = useCallback(
     trackId => {
       addToQueue_api(token, trackId);
@@ -188,7 +180,7 @@ export const Search: React.FC = () => {
                     .join(", ")}
                 </SearchResultArtist>
                 <SearchResultOptions>
-                  <Button onClick={() => playTrack(searchRes.uri)}>
+                  <Button onClick={() => dispatch(playSong(searchRes.uri))}>
                     <FontAwesomeIcon icon={faPlay} />
                   </Button>
                   <Button

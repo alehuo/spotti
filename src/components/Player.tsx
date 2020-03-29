@@ -4,9 +4,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlayCircle, faPauseCircle } from "@fortawesome/free-solid-svg-icons";
 import { debounce } from "lodash";
 import { changeVolume } from "../services/PlaybackService";
-import { useTypedSelector } from "../reducers/rootReducer";
+import { useTypedSelector, AppDispatch } from "../reducers/rootReducer";
 import { Button } from "./ui/Button";
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import {
+  PlayerStatus,
+  continuePlayback,
+  pausePlayback,
+  setDeviceId
+} from "../reducers/playerReducer";
 
 const VolumeSlider = styled.input``;
 const PlayerWrapper = styled.div`
@@ -27,12 +34,14 @@ const debouncedVolumeChange = debounce(
 );
 
 export const Player: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
   const token = useTypedSelector(state => state.auth.token);
+  const status = useTypedSelector(state => state.player.playerStatus);
+  const deviceId = useTypedSelector(state => state.player.deviceId);
+
   const [player, setPlayer] = useState<any>(null);
   const [volume, setVolume] = useState(50);
   const [connected, setConnected] = useState(false);
-  const [deviceId, setDeviceId] = useState("");
-  const [playing, setPlaying] = useState<"playing" | "paused">("paused");
   const initClient = useCallback(() => {
     // @ts-ignore
     const player = new Spotify.Player({
@@ -52,9 +61,7 @@ export const Player: React.FC = () => {
     });
     // @ts-ignore
     player.addListener("ready", ({ device_id }) => {
-      console.log("The Web Playback SDK is ready to play music!");
-      console.log("Device ID", device_id);
-      setDeviceId(device_id);
+      dispatch(setDeviceId(device_id));
     });
     player.connect().then((connected: boolean) => {
       if (connected) {
@@ -71,9 +78,9 @@ export const Player: React.FC = () => {
       player.disconnect();
       setPlayer(null);
       setConnected(false);
-      setDeviceId("");
+      dispatch(setDeviceId(""));
     };
-  }, [token]);
+  }, [dispatch, token]);
 
   // Set the active device
   useEffect(() => {
@@ -97,21 +104,6 @@ export const Player: React.FC = () => {
     }
   }, []);
 
-  const changePlayingState = useCallback(
-    (playingState: "paused" | "playing") => {
-      if (playingState === "playing") {
-        player.resume().then(() => {
-          setPlaying(playingState);
-        });
-      } else {
-        player.pause().then(() => {
-          setPlaying(playingState);
-        });
-      }
-    },
-    [player]
-  );
-
   const handleVolumeChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       e.preventDefault();
@@ -126,13 +118,13 @@ export const Player: React.FC = () => {
   }
   return (
     <PlayerWrapper>
-      {playing === "paused" && (
-        <Button onClick={() => changePlayingState("playing")}>
+      {(status === PlayerStatus.PAUSED || status === PlayerStatus.INITIAL) && (
+        <Button onClick={() => dispatch(continuePlayback())}>
           <FontAwesomeIcon icon={faPlayCircle} />
         </Button>
       )}
-      {playing === "playing" && (
-        <Button onClick={() => changePlayingState("paused")}>
+      {status === PlayerStatus.PLAYING && (
+        <Button onClick={() => dispatch(pausePlayback())}>
           <FontAwesomeIcon icon={faPauseCircle} />
         </Button>
       )}

@@ -1,21 +1,20 @@
 import React, { useEffect, useCallback } from "react";
 import "./Playlists.scss";
 import { fetchPlaylists } from "../services/PlaylistService";
-import { startPlaying } from "../services/PlaybackService";
 import { useTypedSelector, AppDispatch } from "../reducers/rootReducer";
 import { setPlaylists } from "../reducers/playlistReducer";
 import { useDispatch } from "react-redux";
-
+import { playPlaylist } from "../reducers/playerReducer";
 
 export const Playlists: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
   const token = useTypedSelector(state => state.auth.token);
   const playlists = useTypedSelector(state => state.playlist.playlists);
-  const dispatch: AppDispatch = useDispatch();
   const startPlaylist = useCallback(
     playlistId => {
-      startPlaying(token, `spotify:playlist:${playlistId}`);
+      dispatch(playPlaylist(`spotify:playlist:${playlistId}`));
     },
-    [token]
+    [dispatch]
   );
   useEffect(() => {
     fetchPlaylists(token).then(playlists =>

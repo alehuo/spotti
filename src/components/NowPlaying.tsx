@@ -182,7 +182,6 @@ export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
           onLoad={() => {
             // @ts-ignore
             if (imgRef !== null && imgRef.current !== null) {
-              console.log(imgRef);
               const colorThief = new ColorThief();
               // @ts-ignore
               const color = colorThief.getColor(imgRef.current, 50);
