@@ -104,5 +104,12 @@ export const search = async (token: string, searchTerm: string) => {
       }
     }
   );
-  return res.data;
+  return res;
+};
+
+export const getTrack = async (token: string, id: string) => {
+  const res = await customAxios(token).get<Item>(
+    `https://api.spotify.com/v1/tracks/${id}`
+  );
+  return res;
 };

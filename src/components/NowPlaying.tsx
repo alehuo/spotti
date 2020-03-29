@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import { getCurrentlyPlaying } from "../services/PlaybackService";
 import { Player } from "./Player";
 // @ts-ignore
@@ -9,6 +9,7 @@ import { AppDispatch, useTypedSelector } from "../reducers/rootReducer";
 import { getContrast } from "../utils";
 import styled from "styled-components";
 import { imageWidth, imageHeight, msWidth } from "../vars";
+import { PlayerStatus, setCurrentMs } from "../reducers/playerReducer";
 interface Props {
   imgRef: React.Ref<HTMLImageElement>;
 }
@@ -126,26 +127,15 @@ const DurationMs = styled.div`
 
 export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
   const token = useTypedSelector(state => state.auth.token);
+  const status = useTypedSelector(state => state.player.playerStatus);
+  const songData = useTypedSelector(state => state.player.songData);
+  const currentMs = useTypedSelector(state => state.player.currentMs);
+
   const dispatch: AppDispatch = useDispatch();
-  const [albumImages, setAlbumImages] = useState<AlbumImage[]>([]);
-  const [artists, setArtists] = useState<Artist[]>([]);
-  const [songData, setSongData] = useState<SongData>({
-    name: "-",
-    progressMs: 0,
-    durationMs: 0,
-    isPlaying: false
-  });
+
   const getCurrPlaying = useCallback(access_token => {
     getCurrentlyPlaying(access_token).then(res => {
       if (res != null) {
-        setAlbumImages([...res.item.album.images]);
-        setArtists(res.item.artists);
-        setSongData({
-          name: res.item.name,
-          progressMs: res.progress_ms,
-          durationMs: res.item.duration_ms,
-          isPlaying: res.is_playing
-        });
       }
     });
   }, []);
@@ -161,21 +151,25 @@ export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (
-        songData.isPlaying &&
-        songData.progressMs + 1000 < songData.durationMs
+        status === PlayerStatus.PLAYING &&
+        songData !== null &&
+        currentMs + 1000 < songData.duration_ms
       ) {
-        setSongData({ ...songData, progressMs: songData.progressMs + 1000 });
+        dispatch(setCurrentMs(currentMs + 1000));
       }
     }, 1000);
     return () => {
       clearInterval(interval);
     };
-  }, [songData]);
+  }, [currentMs, dispatch, songData, status]);
   return (
     <NowPlayingWrapper>
       <AlbumArt>
         <img
-          src={albumImages?.filter(image => image?.height === 300)[0]?.url}
+          src={
+            songData?.album?.images?.filter(image => image.height === 300)[0]
+              ?.url
+          }
           ref={imgRef}
           crossOrigin="anonymous"
           alt="Album art"
@@ -193,21 +187,24 @@ export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
       </AlbumArt>
       <SongData>
         <SongArtist>
-          <b>{artists.map(artist => artist.name).join(", ")}</b>
+          <b>{songData?.artists?.map(artist => artist.name).join(", ")}</b>
         </SongArtist>
-        <SongName>{songData.name}</SongName>
+        <SongName>{songData?.name}</SongName>
         <PlaybackControls>
           <Player />
         </PlaybackControls>
         <CurrentMs>
-          <MillisToMinutesAndSeconds value={songData.progressMs} />
+          <MillisToMinutesAndSeconds value={currentMs} />
         </CurrentMs>
         <ProgressBar
           max="100"
-          value={((songData.progressMs / songData.durationMs) * 100).toFixed(0)}
+          value={(
+            (currentMs / (songData?.duration_ms || currentMs)) *
+            100
+          ).toFixed(0)}
         />
         <DurationMs>
-          <MillisToMinutesAndSeconds value={songData.durationMs} />
+          <MillisToMinutesAndSeconds value={songData?.duration_ms || 0} />
         </DurationMs>
       </SongData>
     </NowPlayingWrapper>

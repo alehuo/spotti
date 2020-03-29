@@ -3,13 +3,12 @@ import { search, Item } from "../services/SearchService";
 import { debounce } from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
-import { addToQueue as addToQueue_api } from "../services/PlaybackService";
 import { useTypedSelector, AppDispatch } from "../reducers/rootReducer";
 import { Button } from "./ui/Button";
 import { useDispatch } from "react-redux";
-import { addToQueue } from "../reducers/queueReducer";
+import { addToQueue_epic } from "../reducers/queueReducer";
 import styled from "styled-components";
-import { playSong } from "../reducers/playerReducer";
+import { playSong_epic } from "../reducers/playerReducer";
 
 const SearchWrapper = styled.div`
   padding: 16px;
@@ -112,9 +111,9 @@ export const Search: React.FC = () => {
     searchTerm => {
       if (searchTerm !== "") {
         search(token, searchTerm).then(searchRes => {
-          if (searchRes.tracks !== undefined) {
-            setSearchResults(searchRes.tracks.items);
-            setSearchResultCount(searchRes.tracks.total);
+          if (searchRes.data.tracks !== undefined) {
+            setSearchResults(searchRes.data.tracks.items);
+            setSearchResultCount(searchRes.data.tracks.total);
           }
         });
       }
@@ -122,10 +121,10 @@ export const Search: React.FC = () => {
     [token]
   );
   const que = useCallback(
-    trackId => {
-      addToQueue_api(token, trackId);
+    (itm: Item) => {
+      dispatch(addToQueue_epic(itm));
     },
-    [token]
+    [dispatch]
   );
   const debouncedSearch = useCallback(
     debounce(searchForTracks, 800, { maxWait: 1000 }),
@@ -180,13 +179,16 @@ export const Search: React.FC = () => {
                     .join(", ")}
                 </SearchResultArtist>
                 <SearchResultOptions>
-                  <Button onClick={() => dispatch(playSong(searchRes.uri))}>
+                  <Button
+                    onClick={() =>
+                      dispatch(playSong_epic(searchRes.uri, searchRes.id))
+                    }
+                  >
                     <FontAwesomeIcon icon={faPlay} />
                   </Button>
                   <Button
                     onClick={() => {
-                      que(searchRes.uri);
-                      dispatch(addToQueue(searchRes));
+                      que(searchRes);
                     }}
                   >
                     <FontAwesomeIcon icon={faPlusCircle} />

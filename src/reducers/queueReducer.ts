@@ -1,14 +1,22 @@
 import { action, ActionType, Reducer } from "typesafe-actions";
 import { Item } from "../services/SearchService";
 
-const ADD_TO_QUEUE = "ADD_TO_QUEUE";
+export const ADD_TO_QUEUE_EPIC = "ADD_TO_QUEUE_EPIC";
+export const ADD_TO_QUEUE = "ADD_TO_QUEUE";
 
-export const addToQueue = (queueItem: Item) =>
+export const addToQueue_epic = (queueItem: Item) =>
+  action(ADD_TO_QUEUE_EPIC, {
+    queueItem
+  });
+
+export const addSongToQueue = (queueItem: Item) =>
   action(ADD_TO_QUEUE, {
     queueItem
   });
 
-export type QueueReducerAction = ActionType<typeof addToQueue>;
+export type QueueReducerAction = ActionType<
+  typeof addSongToQueue | typeof addToQueue_epic
+>;
 
 export type QueueReducerState = {
   readonly queueItems: Item[];

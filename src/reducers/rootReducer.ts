@@ -9,6 +9,7 @@ import { TypedUseSelectorHook, useSelector } from "react-redux";
 import { playlistReducer } from "./playlistReducer";
 import { queueReducer } from "./queueReducer";
 import { rootEpic } from "../epics/rootEpic";
+import logger from "redux-logger";
 
 export type Reducer<T, K> = (state: T, action: K) => T;
 
@@ -28,7 +29,7 @@ const epicMiddleware = createEpicMiddleware();
 
 export const store = createStore(
   rootReducer,
-  composeWithDevTools(applyMiddleware(epicMiddleware))
+  composeWithDevTools(applyMiddleware(logger, epicMiddleware))
 );
 export type AppDispatch = typeof store.dispatch;
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;

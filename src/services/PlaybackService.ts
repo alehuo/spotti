@@ -150,14 +150,11 @@ export const getCurrentlyPlaying = async (token: string) => {
   const res = await customAxios(token).get<RootObject>(
     "https://api.spotify.com/v1/me/player/currently-playing"
   );
-  if (res.status === 204) {
-    return null;
-  }
-  return res.data;
+  return res;
 };
 
 export const addToQueue = async (token: string, trackUri: string) => {
-  await customAxios(token).post(
+  const res = await customAxios(token).post(
     "https://api.spotify.com/v1/me/player/queue",
     null,
     {
@@ -166,7 +163,9 @@ export const addToQueue = async (token: string, trackUri: string) => {
       }
     }
   );
+  return res;
 };
+
 export const pausePlayback = async (token: string, device_id: string) => {
   const res = await customAxios(token).put(
     "https://api.spotify.com/v1/me/player/pause",

@@ -3,12 +3,16 @@ import {
   playSongEpic,
   pausePlaybackEpic,
   resumePlaybackEpic,
-  playPlaylistEpic
+  playPlaylistEpic,
+  setCurrentTrackEpic
 } from "./playerEpic";
+import { addToQueueEpic } from "./queueEpic";
 
 export const rootEpic = combineEpics(
   playSongEpic,
   playPlaylistEpic,
   pausePlaybackEpic,
-  resumePlaybackEpic
+  resumePlaybackEpic,
+  addToQueueEpic,
+  setCurrentTrackEpic
 );

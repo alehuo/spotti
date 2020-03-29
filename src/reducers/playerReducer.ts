@@ -1,4 +1,5 @@
 import { Reducer, action, ActionType } from "typesafe-actions";
+import { Item } from "../services/SearchService";
 
 export enum PlayerStatus {
   PLAYING,
@@ -8,13 +9,17 @@ export enum PlayerStatus {
 
 export const SET_PLAYER_STATUS = "SET_PLAYER_STATUS";
 export const SET_CURRENT_MS = "SET_CURRENT_MS";
+export const SET_CURRENT_TRACK_EPIC = "SET_CURRENT_TRACK_EPIC";
 export const PLAY_SONG = "PLAY_SONG";
 export const PAUSE_PLAYBACK = "PAUSE_PLAYBACK";
 export const CONTINUE_PLAYBACK = "CONTINUE_PLAYBACK";
 export const PLAY_PLAYLIST = "PLAY_PLAYLIST";
 export const SET_DEVICE_ID = "SET_DEVICE_ID";
+export const SET_SONG_DATA = "SET_SONG_DATA";
 
-export const playSong = (songId: string) => action(PLAY_SONG, { songId });
+export const playSong_epic = (uri: string, id: string) =>
+  action(PLAY_SONG, { uri, id });
+
 export const continuePlayback = () => action(CONTINUE_PLAYBACK);
 export const pausePlayback = () => action(PAUSE_PLAYBACK);
 export const playPlaylist = (playlistId: string) =>
@@ -28,28 +33,34 @@ export const setPlayerStatus = (status: PlayerStatus) =>
 export const setCurrentMs = (currentMs: number) =>
   action(SET_CURRENT_MS, { currentMs });
 
+export const setSongData = (songData: Item) =>
+  action(SET_SONG_DATA, { songData });
+
+export const setCurrentTrack_epic = () => action(SET_CURRENT_TRACK_EPIC);
+
 export type PlayerReducerAction = ActionType<
   | typeof setPlayerStatus
   | typeof setCurrentMs
-  | typeof playSong
+  | typeof playSong_epic
   | typeof continuePlayback
   | typeof pausePlayback
   | typeof playPlaylist
   | typeof setDeviceId
+  | typeof setSongData
 >;
 
 export type PlayerReducerState = {
   readonly playerStatus: PlayerStatus;
   readonly deviceId: string;
   readonly currentMs: number;
-  readonly totalMs: number;
+  readonly songData: Item | null;
 };
 
 const initialState: PlayerReducerState = {
   playerStatus: PlayerStatus.INITIAL,
   deviceId: "",
   currentMs: 0,
-  totalMs: 0
+  songData: null
 };
 
 export const playerReducer: Reducer<PlayerReducerState, PlayerReducerAction> = (
@@ -63,6 +74,8 @@ export const playerReducer: Reducer<PlayerReducerState, PlayerReducerAction> = (
       return { ...state, currentMs: action.payload.currentMs };
     case SET_DEVICE_ID:
       return { ...state, deviceId: action.payload.device_id };
+    case SET_SONG_DATA:
+      return { ...state, songData: { ...action.payload.songData } };
     default:
       return { ...state };
   }
