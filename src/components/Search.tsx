@@ -5,12 +5,10 @@ import { debounce } from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import { startPlayingTrack, addToQueue } from "../services/PlaybackService";
+import { useTypedSelector } from "../reducers/rootReducer";
 
-interface Props {
-  token: string;
-}
-
-export const Search: React.FC<Props> = ({ token }) => {
+export const Search: React.FC = () => {
+  const token = useTypedSelector(state => state.auth.token);
   const [searchResults, setSearchResults] = useState<any[]>([]);
   const [searchText, setSearchText] = useState("");
   const [searchResultsCount, setSearchResultCount] = useState(0);

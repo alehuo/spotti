@@ -5,10 +5,7 @@ import { faPlayCircle, faPauseCircle } from "@fortawesome/free-solid-svg-icons";
 import { debounce } from "lodash";
 import "./Player.scss";
 import { changeVolume } from "../services/PlaybackService";
-
-interface Props {
-  token: string;
-}
+import { useTypedSelector } from "../reducers/rootReducer";
 
 const debouncedVolumeChange = debounce(
   (token: string, volume: number, deviceId: string) => {
@@ -22,7 +19,8 @@ const debouncedVolumeChange = debounce(
   }
 );
 
-export const Player: React.FC<Props> = ({ token }) => {
+export const Player: React.FC = () => {
+  const token = useTypedSelector(state => state.auth.token);
   const [player, setPlayer] = useState<any>(null);
   const [volume, setVolume] = useState(50);
   const [connected, setConnected] = useState(false);

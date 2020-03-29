@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import queryString from "query-string";
 import "./App.scss";
 import { NowPlaying } from "./components/NowPlaying";
 import { Playlists } from "./components/Playlists";
 import { Queue } from "./components/Queue";
 import { Search } from "./components/Search";
+import { useDispatch } from "react-redux";
+import { AppDispatch, useTypedSelector } from "./reducers/rootReducer";
+import { setToken } from "./reducers/authReducer";
 
 const authUrl = "https://accounts.spotify.com/authorize";
 const query = queryString.stringify(
@@ -20,34 +23,37 @@ const url = `${authUrl}?${query}`;
 const imgRef = React.createRef<HTMLImageElement>();
 
 const App = () => {
-  
-  const [token, setToken] = useState("");
-  const [bgColor, setBgColor] = useState("#282c34");
+  const dispatch: AppDispatch = useDispatch();
+  const token = useTypedSelector(state => state.auth.token);
+  const bgColor = useTypedSelector(state => state.ui.bgColor);
   useEffect(() => {
     const qry = queryString.parse(window.location.hash.substring(1));
     window.location.hash = "";
     let _token = qry.access_token;
     if (_token) {
       if (!Array.isArray(_token)) {
-        setToken(_token);
+        dispatch(setToken(_token));
       }
     }
-  }, []);
+  }, [dispatch]);
 
   return (
-    <div className="App" style={{
-      backgroundColor: bgColor
-    }}>
+    <div
+      className="App"
+      style={{
+        backgroundColor: bgColor
+      }}
+    >
       {token === "" ? (
         <a href={url} className="authorize-link">
           Authorize Spotify
         </a>
       ) : (
         <>
-          <NowPlaying token={token} imgRef={imgRef} handleBgColor={setBgColor}/>
-          <Playlists token={token} />
-          <Queue token={token} />
-          <Search token={token} />
+          <NowPlaying imgRef={imgRef} />
+          <Playlists />
+          <Queue />
+          <Search />
         </>
       )}
     </div>

@@ -1,4 +1,4 @@
-import { Reducer } from "./rootReducer";
+import { Reducer, action, ActionType } from "typesafe-actions";
 
 enum PlayerStatus {
   PLAYING,
@@ -9,25 +9,13 @@ enum PlayerStatus {
 const SET_PLAYER_STATUS = "SET_PLAYER_STATUS";
 const SET_CURRENT_MS = "SET_CURRENT_MS";
 
-export const setPlayerStatus = (status: PlayerStatus) => {
-  return {
-    type: SET_PLAYER_STATUS,
-    playload: {
-      status
-    }
-  } as const;
-};
+export const setPlayerStatus = (status: PlayerStatus) =>
+  action(SET_PLAYER_STATUS, { status });
 
-export const setCurrentMs = (currentMs: number) => {
-  return {
-    type: SET_CURRENT_MS,
-    playload: {
-      currentMs
-    }
-  } as const;
-};
+export const setCurrentMs = (currentMs: number) =>
+  action(SET_CURRENT_MS, { currentMs });
 
-export type PlayerReducerAction = ReturnType<
+export type PlayerReducerAction = ActionType<
   typeof setPlayerStatus | typeof setCurrentMs
 >;
 
@@ -49,9 +37,9 @@ export const playerReducer: Reducer<PlayerReducerState, PlayerReducerAction> = (
 ) => {
   switch (action.type) {
     case SET_PLAYER_STATUS:
-      return { ...state, playerStatus: action.playload.status };
+      return { ...state, playerStatus: action.payload.status };
     case SET_CURRENT_MS:
-      return { ...state, currentMs: action.playload.currentMs };
+      return { ...state, currentMs: action.payload.currentMs };
     default:
       return { ...state };
   }

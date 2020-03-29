@@ -4,10 +4,11 @@ import { getCurrentlyPlaying } from "../services/PlaybackService";
 import { Player } from "./Player";
 // @ts-ignore
 import ColorThief from "colorthief";
+import { setBgColor } from "../reducers/uiReducer";
+import { useDispatch } from "react-redux";
+import { AppDispatch, useTypedSelector } from "../reducers/rootReducer";
 interface Props {
-  token: string;
   imgRef: React.Ref<HTMLImageElement>;
-  handleBgColor: any;
 }
 
 interface Artist {
@@ -38,7 +39,9 @@ const MillisToMinutesAndSeconds: React.FC<{ value: number }> = ({ value }) => {
   );
 };
 
-export const NowPlaying: React.FC<Props> = ({ token, imgRef, handleBgColor }) => {
+export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
+  const token = useTypedSelector(state => state.auth.token);
+  const dispatch: AppDispatch = useDispatch();
   const [albumImages, setAlbumImages] = useState<AlbumImage[]>([]);
   const [artists, setArtists] = useState<Artist[]>([]);
   const [songData, setSongData] = useState<SongData>({
@@ -98,7 +101,7 @@ export const NowPlaying: React.FC<Props> = ({ token, imgRef, handleBgColor }) =>
               const colorThief = new ColorThief();
               // @ts-ignore
               const color = colorThief.getColor(imgRef.current, 50);
-              handleBgColor(`rgb(${color[0]},${color[1]},${color[2]})`);
+              dispatch(setBgColor(`rgb(${color[0]},${color[1]},${color[2]})`));
             }
           }}
         />
@@ -109,7 +112,7 @@ export const NowPlaying: React.FC<Props> = ({ token, imgRef, handleBgColor }) =>
         </div>
         <div className="song-name">{songData.name}</div>
         <div className="playback-controls">
-          <Player token={token} />
+          <Player />
         </div>
         <div className="song-progress-currentms">
           {<MillisToMinutesAndSeconds value={songData.progressMs} />}
