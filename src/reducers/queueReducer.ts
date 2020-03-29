@@ -1,8 +1,9 @@
 import { action, ActionType, Reducer } from "typesafe-actions";
+import { Item } from "../services/SearchService";
 
 const ADD_TO_QUEUE = "ADD_TO_QUEUE";
 
-export const addToQueue = (queueItem: string) =>
+export const addToQueue = (queueItem: Item) =>
   action(ADD_TO_QUEUE, {
     queueItem
   });
@@ -10,7 +11,7 @@ export const addToQueue = (queueItem: string) =>
 export type QueueReducerAction = ActionType<typeof addToQueue>;
 
 export type QueueReducerState = {
-  readonly queueItems: string[];
+  readonly queueItems: Item[];
 };
 
 const initialState: QueueReducerState = {

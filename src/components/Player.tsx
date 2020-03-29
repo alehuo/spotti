@@ -3,9 +3,16 @@ import { setActiveDevice } from "../services/DeviceService";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlayCircle, faPauseCircle } from "@fortawesome/free-solid-svg-icons";
 import { debounce } from "lodash";
-import "./Player.scss";
 import { changeVolume } from "../services/PlaybackService";
 import { useTypedSelector } from "../reducers/rootReducer";
+import { Button } from "./ui/Button";
+import styled from "styled-components";
+
+const VolumeSlider = styled.input``;
+const PlayerWrapper = styled.div`
+  width: 100%;
+  height: 100%;
+`;
 
 const debouncedVolumeChange = debounce(
   (token: string, volume: number, deviceId: string) => {
@@ -115,21 +122,21 @@ export const Player: React.FC = () => {
   );
 
   if (player == null || !connected || deviceId === "") {
-    return <div>Loading player...</div>;
+    return <PlayerWrapper>Loading player...</PlayerWrapper>;
   }
   return (
-    <div className="player">
+    <PlayerWrapper>
       {playing === "paused" && (
-        <button className="btn" onClick={() => changePlayingState("playing")}>
+        <Button onClick={() => changePlayingState("playing")}>
           <FontAwesomeIcon icon={faPlayCircle} />
-        </button>
+        </Button>
       )}
       {playing === "playing" && (
-        <button className="btn" onClick={() => changePlayingState("paused")}>
+        <Button onClick={() => changePlayingState("paused")}>
           <FontAwesomeIcon icon={faPauseCircle} />
-        </button>
+        </Button>
       )}
-      <input
+      <VolumeSlider
         type="range"
         step="1"
         min="0"
@@ -137,6 +144,6 @@ export const Player: React.FC = () => {
         value={volume}
         onChange={handleVolumeChange}
       />
-    </div>
+    </PlayerWrapper>
   );
 };

@@ -1,5 +1,4 @@
 @import "./vars";
-@import "./mixins";
 
 * {
   box-sizing: border-box;
@@ -12,11 +11,8 @@ html {
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 300;
   font-size: calc(10px + 2vmin);
   height: $app-height;
   width: $app-width;
@@ -32,13 +28,16 @@ code {
   height: 100%;
 }
 
-.btn {
-  background-color: transparent;
-  @include blend();
-  border: 0;
-  font-size: 1.6em;
-  &:hover {
-    cursor: pointer;
-    color: rgb(31, 209, 31);
-  }
+progress[value] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 10px;
+}
+progress[value]::-webkit-progress-value {
+  border-radius: 5px;
+  background-color: rgb(197, 197, 197);
+}
+progress[value]::-webkit-progress-bar {
+  border-radius: 5px;
+  background-color: rgba(31, 34, 41, 0.534);
 }

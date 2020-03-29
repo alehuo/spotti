@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
-import "./NowPlaying.scss";
 import { getCurrentlyPlaying } from "../services/PlaybackService";
 import { Player } from "./Player";
 // @ts-ignore
 import ColorThief from "colorthief";
-import { setBgColor } from "../reducers/uiReducer";
+import { setBgColor, setTextColor } from "../reducers/uiReducer";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useTypedSelector } from "../reducers/rootReducer";
+import { getContrast } from "../utils";
+import styled from "styled-components";
+import { imageWidth, imageHeight, msWidth } from "../vars";
 interface Props {
   imgRef: React.Ref<HTMLImageElement>;
 }
@@ -38,6 +40,89 @@ const MillisToMinutesAndSeconds: React.FC<{ value: number }> = ({ value }) => {
     </span>
   );
 };
+
+const NowPlayingWrapper = styled.div`
+  padding: 16px;
+  grid-area: nowplaying;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: ${imageWidth} 1fr;
+  grid-template-rows: ${imageHeight} 1fr 1fr;
+  grid-template-areas:
+    "albumart songdata"
+    "albumart songdata"
+    "albumart songdata";
+`;
+
+const AlbumArt = styled.div`
+  text-align: left;
+  grid-area: albumart;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  img {
+    width: ${imageWidth};
+    height: ${imageHeight};
+  }
+`;
+
+const SongData = styled.div`
+  grid-area: songdata;
+  width: 100%;
+  display: grid;
+  font-size: 0.8em;
+  grid-template-rows: 36px 60px 48px auto;
+  grid-template-columns: ${msWidth} calc(100% - ${msWidth} * 2) ${msWidth};
+  grid-template-areas:
+    "songname songname songname"
+    "artist artist artist"
+    "playbackctrl playbackctrl playbackctrl"
+    "currentms progressbar durationms";
+`;
+
+const SongArtist = styled.div`
+  padding-left: 16px;
+  text-align: left;
+  font-weight: bold;
+  grid-area: artist;
+  align-self: top;
+`;
+
+const SongName = styled.div`
+  padding-left: 16px;
+  text-align: left;
+  align-self: center;
+  grid-area: songname;
+`;
+
+const PlaybackControls = styled.div`
+  padding-left: 16px;
+  grid-area: playbackctrl;
+  align-self: center;
+`;
+
+const ProgressBar = styled.progress`
+  grid-area: progressbar;
+  align-self: center;
+  width: 95%;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  height: 10px;
+  border-radius: 5px;
+`;
+
+const CurrentMs = styled.div`
+  padding-left: 16px;
+  text-align: center;
+  grid-area: currentms;
+  align-self: center;
+`;
+
+const DurationMs = styled.div`
+  text-align: left;
+  grid-area: durationms;
+  align-self: center;
+`;
 
 export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
   const token = useTypedSelector(state => state.auth.token);
@@ -87,8 +172,8 @@ export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
     };
   }, [songData]);
   return (
-    <div className="now-playing">
-      <div className="album-art">
+    <NowPlayingWrapper>
+      <AlbumArt>
         <img
           src={albumImages?.filter(image => image?.height === 300)[0]?.url}
           ref={imgRef}
@@ -102,30 +187,30 @@ export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
               // @ts-ignore
               const color = colorThief.getColor(imgRef.current, 50);
               dispatch(setBgColor(`rgb(${color[0]},${color[1]},${color[2]})`));
+              dispatch(setTextColor(getContrast(color[0], color[1], color[2])));
             }
           }}
         />
-      </div>
-      <div className="song-data">
-        <div className="song-artist">
+      </AlbumArt>
+      <SongData>
+        <SongArtist>
           <b>{artists.map(artist => artist.name).join(", ")}</b>
-        </div>
-        <div className="song-name">{songData.name}</div>
-        <div className="playback-controls">
+        </SongArtist>
+        <SongName>{songData.name}</SongName>
+        <PlaybackControls>
           <Player />
-        </div>
-        <div className="song-progress-currentms">
-          {<MillisToMinutesAndSeconds value={songData.progressMs} />}
-        </div>
-        <progress
-          className="song-progress-progressbar"
+        </PlaybackControls>
+        <CurrentMs>
+          <MillisToMinutesAndSeconds value={songData.progressMs} />
+        </CurrentMs>
+        <ProgressBar
           max="100"
           value={((songData.progressMs / songData.durationMs) * 100).toFixed(0)}
-        ></progress>
-        <div className="song-progress-durationms">
-          {<MillisToMinutesAndSeconds value={songData.durationMs} />}
-        </div>
-      </div>
-    </div>
+        />
+        <DurationMs>
+          <MillisToMinutesAndSeconds value={songData.durationMs} />
+        </DurationMs>
+      </SongData>
+    </NowPlayingWrapper>
   );
 };

@@ -1,15 +1,113 @@
 import React, { useState, useCallback } from "react";
-import { search } from "../services/SearchService";
-import "./Search.scss";
+import { search, Item } from "../services/SearchService";
 import { debounce } from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
-import { startPlayingTrack, addToQueue } from "../services/PlaybackService";
-import { useTypedSelector } from "../reducers/rootReducer";
+import {
+  startPlayingTrack,
+  addToQueue as addToQueue_api
+} from "../services/PlaybackService";
+import { useTypedSelector, AppDispatch } from "../reducers/rootReducer";
+import { Button } from "./ui/Button";
+import { useDispatch } from "react-redux";
+import { addToQueue } from "../reducers/queueReducer";
+import styled from "styled-components";
+
+const SearchWrapper = styled.div`
+  padding: 16px;
+  grid-area: search;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 48px 56px calc(100% - 48px - 56px);
+`;
+
+const SearchTitle = styled.div`
+  height: 48px;
+  width: 100%;
+`;
+
+const SearchBar = styled.div`
+  height: 48px;
+  width: 100%;
+`;
+
+const SearchTerm = styled.input`
+  padding: 8px;
+  display: block;
+  height: 100%;
+  width: 60%;
+  color: ${props => props.theme.textColor};
+  align-self: center;
+  background-color: transparent;
+  border: 0;
+  border-bottom: 2px solid ${props => props.theme.textColor};
+  font-size: 0.7em;
+  ::placeholder {
+    color: ${props => props.theme.textColor};
+    opacity: 0.5;
+  }
+`;
+
+const SearchResults = styled.div`
+  height: 100%;
+  width: 100%;
+  overflow-y: scroll;
+`;
+
+const SearchResultAmount = styled.div`
+  font-weight: bold;
+  font-size: 0.7em;
+  padding-left: 16px;
+  height: 24px;
+  width: 100%;
+`;
+
+const SearchResult = styled.div`
+  height: 64px;
+  width: 100%;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 64px auto 128px;
+  font-size: 0.6em;
+  &:nth-child(even) {
+    background-color: rgba(255, 255, 255, 0.055);
+  }
+  grid-template-areas:
+    "trackimage trackname options"
+    "trackimage artist options";
+`;
+
+const SearchResultImg = styled.div`
+  height: 64px;
+  grid-area: trackimage;
+  align-self: center;
+`;
+
+const SearchResultTrack = styled.div`
+  grid-area: trackname;
+  padding-left: 8px;
+  align-self: center;
+`;
+
+const SearchResultArtist = styled.div`
+  grid-area: artist;
+  font-weight: bold;
+  padding-left: 8px;
+  align-self: start;
+`;
+
+const SearchResultOptions = styled.div`
+  grid-area: options;
+  align-self: center;
+  text-align: center;
+`;
 
 export const Search: React.FC = () => {
+  const dispatch: AppDispatch = useDispatch();
   const token = useTypedSelector(state => state.auth.token);
-  const [searchResults, setSearchResults] = useState<any[]>([]);
+  const [searchResults, setSearchResults] = useState<Item[]>([]);
   const [searchText, setSearchText] = useState("");
   const [searchResultsCount, setSearchResultCount] = useState(0);
   const searchForTracks = useCallback(
@@ -33,7 +131,7 @@ export const Search: React.FC = () => {
   );
   const que = useCallback(
     trackId => {
-      addToQueue(token, trackId);
+      addToQueue_api(token, trackId);
     },
     [token]
   );
@@ -42,13 +140,12 @@ export const Search: React.FC = () => {
     []
   );
   return (
-    <div className="search">
-      <div className="search-title">Search for tracks</div>
-      <div className="search-bar">
-        <input
+    <SearchWrapper>
+      <SearchTitle>Search for tracks</SearchTitle>
+      <SearchBar>
+        <SearchTerm
           type="text"
           name="search-term"
-          className="search-term"
           placeholder="Search.."
           value={searchText}
           onChange={e => {
@@ -63,18 +160,18 @@ export const Search: React.FC = () => {
             }
           }}
         />
-      </div>
-      <div className="search-results">
+      </SearchBar>
+      <SearchResults>
         {searchText !== "" && searchResults && searchResults.length > 0 && (
-          <div className="search-result-amount">
+          <SearchResultAmount>
             {searchResultsCount} result(s)
-          </div>
+          </SearchResultAmount>
         )}
         <div>
           {searchText !== "" &&
             searchResults.map(searchRes => (
-              <div className="search-result" key={searchRes.id}>
-                <div className="search-result-img">
+              <SearchResult key={searchRes.id}>
+                <SearchResultImg>
                   <img
                     src={
                       searchRes.album.images.find(
@@ -83,28 +180,30 @@ export const Search: React.FC = () => {
                     }
                     alt=""
                   />
-                </div>
-                <div className="track">{searchRes.name}</div>
-                <div className="artist">
+                </SearchResultImg>
+                <SearchResultTrack>{searchRes.name}</SearchResultTrack>
+                <SearchResultArtist>
                   {searchRes.artists
                     .map((artist: any) => artist.name)
                     .join(", ")}
-                </div>
-                <div className="options">
-                  <button
-                    className="btn"
-                    onClick={() => playTrack(searchRes.uri)}
-                  >
+                </SearchResultArtist>
+                <SearchResultOptions>
+                  <Button onClick={() => playTrack(searchRes.uri)}>
                     <FontAwesomeIcon icon={faPlay} />
-                  </button>
-                  <button className="btn" onClick={() => que(searchRes.uri)}>
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      que(searchRes.uri);
+                      dispatch(addToQueue(searchRes));
+                    }}
+                  >
                     <FontAwesomeIcon icon={faPlusCircle} />
-                  </button>
-                </div>
-              </div>
+                  </Button>
+                </SearchResultOptions>
+              </SearchResult>
             ))}
         </div>
-      </div>
-    </div>
+      </SearchResults>
+    </SearchWrapper>
   );
 };

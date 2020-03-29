@@ -1,5 +1,4 @@
 @import "../vars";
-@import "../mixins";
 
 .playlists {
   padding: 16px;
@@ -11,7 +10,6 @@
   padding: 8px;
   height: 48px;
   width: 100%;
-  @include blend();
 }
 
 .playlist-results {
@@ -48,7 +46,6 @@
   grid-area: playlistname;
   padding-left: 16px;
   align-self: center;
-  @include blend();
 }
 .playlist-tracks {
   grid-area: playlisttracks;
@@ -57,5 +54,4 @@
   text-align: right;
   padding-right: 16px;
   align-self: center;
-  @include blend();
 }

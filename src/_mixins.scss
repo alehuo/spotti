@@ -1,6 +1,0 @@
-@import "./vars";
-
-@mixin blend {
-    color: $text-color;
-    mix-blend-mode: difference;
-}
