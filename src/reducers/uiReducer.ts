@@ -17,7 +17,7 @@ export type UiReducerState = {
 };
 
 const initialState: UiReducerState = {
-  bgColor: "#000000",
+  bgColor: "#D87260",
   textColor: "white"
 };
 

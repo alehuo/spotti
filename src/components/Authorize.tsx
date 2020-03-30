@@ -5,7 +5,7 @@ import { AuthorizeLink } from "./ui/AuthorizeLink";
 import styled from "styled-components";
 
 const AuthorizeWrapper = styled.div`
-  background-color: ${props => props.theme.darkBlue1};
+  background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
   width: 100%;
   height: 100%;
   grid-column-start: span 2;

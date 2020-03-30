@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
 export const AuthorizeLink = styled.a`
-  color: ${props => props.theme.black1};
-  background-color: ${props => props.theme.green1};
-  border: 2px solid ${props => props.theme.green1};
+  color: ${props => props.theme.white1};
+  background-color: transparent;
+  border: 2px solid ${props => props.theme.white1};
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   transition-property: background-color, color, border;
   display: flex;
@@ -15,8 +15,7 @@ export const AuthorizeLink = styled.a`
   padding-right: 32px;
   text-decoration: none;
   &:hover {
-    background-color: ${props => props.theme.black1};
-    border: 2px solid ${props => props.theme.green1};
-    color: ${props => props.theme.green1};
+    background-color: ${props => props.theme.white1};
+    color: ${props => props.theme.black1};
   }
 `;

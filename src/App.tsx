@@ -31,7 +31,7 @@ const AppWrapper = styled.div`
 `;
 
 const defaultTheme = {
-  bgColor: "black",
+  bgColor: "#D87260",
   color: "white",
   green1: "rgb(80, 217, 80)",
   darkBlue1: "rgb(6, 7, 15)",
