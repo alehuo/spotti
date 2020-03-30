@@ -16,6 +16,7 @@ export const CONTINUE_PLAYBACK = "CONTINUE_PLAYBACK";
 export const PLAY_PLAYLIST = "PLAY_PLAYLIST";
 export const SET_DEVICE_ID = "SET_DEVICE_ID";
 export const SET_SONG_DATA = "SET_SONG_DATA";
+export const SET_VOLUME = "SET_VOLUME";
 
 export const playSong_epic = (uri: string, id: string) =>
   action(PLAY_SONG, { uri, id });
@@ -36,6 +37,9 @@ export const setCurrentMs = (currentMs: number) =>
 export const setSongData = (songData: Item) =>
   action(SET_SONG_DATA, { songData });
 
+export const setVolume = (volumePercent: number) =>
+  action(SET_VOLUME, { volumePercent });
+
 export const setCurrentTrack_epic = () => action(SET_CURRENT_TRACK_EPIC);
 
 export type PlayerReducerAction = ActionType<
@@ -47,6 +51,8 @@ export type PlayerReducerAction = ActionType<
   | typeof playPlaylist
   | typeof setDeviceId
   | typeof setSongData
+  | typeof setCurrentTrack_epic
+  | typeof setVolume
 >;
 
 export type PlayerReducerState = {
@@ -54,13 +60,15 @@ export type PlayerReducerState = {
   readonly deviceId: string;
   readonly currentMs: number;
   readonly songData: Item | null;
+  readonly volumePercent: number;
 };
 
 const initialState: PlayerReducerState = {
   playerStatus: PlayerStatus.INITIAL,
   deviceId: "",
   currentMs: 0,
-  songData: null
+  songData: null,
+  volumePercent: 50
 };
 
 export const playerReducer: Reducer<PlayerReducerState, PlayerReducerAction> = (
@@ -76,6 +84,8 @@ export const playerReducer: Reducer<PlayerReducerState, PlayerReducerAction> = (
       return { ...state, deviceId: action.payload.device_id };
     case SET_SONG_DATA:
       return { ...state, songData: { ...action.payload.songData } };
+    case SET_VOLUME:
+      return { ...state, volumePercent: action.payload.volumePercent };
     default:
       return { ...state };
   }

@@ -4,6 +4,14 @@
 
 This repository contains a Spotify Web Dashboard implementation, built with React. The main motivation for this project was just to test things out and to get familiar with the Spotify SDK.
 
+## Technology stack
+
+- TypeScript
+- React.js
+- Styled Components
+- React Redux + RxJS + redux-observable
+- Spotify Wek SDK
+
 ## Features
 
 - View the current track information

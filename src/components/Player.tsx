@@ -12,7 +12,8 @@ import {
   PlayerStatus,
   continuePlayback,
   pausePlayback,
-  setDeviceId
+  setDeviceId,
+  setVolume
 } from "../reducers/playerReducer";
 
 const VolumeSlider = styled.input``;
@@ -40,7 +41,7 @@ export const Player: React.FC = () => {
   const deviceId = useTypedSelector(state => state.player.deviceId);
 
   const [player, setPlayer] = useState<any>(null);
-  const [volume, setVolume] = useState(50);
+  const volume = useTypedSelector(state => state.player.volumePercent);
   const [connected, setConnected] = useState(false);
   const initClient = useCallback(() => {
     // @ts-ignore
@@ -107,10 +108,10 @@ export const Player: React.FC = () => {
   const handleVolumeChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       e.preventDefault();
-      setVolume(Number(e.target.value));
+      dispatch(setVolume(Number(e.target.value)));
       debouncedVolumeChange(token, Number(e.target.value), deviceId);
     },
-    [deviceId, token]
+    [dispatch, deviceId, token]
   );
 
   if (player == null || !connected || deviceId === "") {

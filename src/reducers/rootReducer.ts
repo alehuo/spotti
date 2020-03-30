@@ -27,9 +27,16 @@ export type RootState = StateType<typeof rootReducer>;
 
 const epicMiddleware = createEpicMiddleware();
 
+const middleware = () => {
+  if (process.env.NODE_ENV !== "production") {
+    return [logger, epicMiddleware];
+  }
+  return [epicMiddleware];
+};
+
 export const store = createStore(
   rootReducer,
-  composeWithDevTools(applyMiddleware(logger, epicMiddleware))
+  composeWithDevTools(applyMiddleware(...middleware()))
 );
 export type AppDispatch = typeof store.dispatch;
 export const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;

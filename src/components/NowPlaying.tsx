@@ -1,5 +1,4 @@
-import React, { useEffect, useCallback } from "react";
-import { getCurrentlyPlaying } from "../services/PlaybackService";
+import React, { useEffect } from "react";
 import { Player } from "./Player";
 // @ts-ignore
 import ColorThief from "colorthief";
@@ -9,26 +8,13 @@ import { AppDispatch, useTypedSelector } from "../reducers/rootReducer";
 import { getContrast } from "../utils";
 import styled from "styled-components";
 import { imageWidth, imageHeight, msWidth } from "../vars";
-import { PlayerStatus, setCurrentMs } from "../reducers/playerReducer";
+import {
+  PlayerStatus,
+  setCurrentMs,
+  setCurrentTrack_epic
+} from "../reducers/playerReducer";
 interface Props {
   imgRef: React.Ref<HTMLImageElement>;
-}
-
-interface Artist {
-  name: string;
-}
-
-interface AlbumImage {
-  height: number;
-  url: string;
-  width: number;
-}
-
-interface SongData {
-  name: string;
-  progressMs: number;
-  durationMs: number;
-  isPlaying: boolean;
 }
 
 const MillisToMinutesAndSeconds: React.FC<{ value: number }> = ({ value }) => {
@@ -126,28 +112,21 @@ const DurationMs = styled.div`
 `;
 
 export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
-  const token = useTypedSelector(state => state.auth.token);
   const status = useTypedSelector(state => state.player.playerStatus);
   const songData = useTypedSelector(state => state.player.songData);
   const currentMs = useTypedSelector(state => state.player.currentMs);
 
   const dispatch: AppDispatch = useDispatch();
 
-  const getCurrPlaying = useCallback(access_token => {
-    getCurrentlyPlaying(access_token).then(res => {
-      if (res != null) {
-      }
-    });
-  }, []);
   useEffect(() => {
-    getCurrPlaying(token);
-  }, [getCurrPlaying, token]);
-  useEffect(() => {
-    const interval = setInterval(() => getCurrPlaying(token), 1000 * 10);
+    const interval = setInterval(
+      () => dispatch(setCurrentTrack_epic()),
+      1000 * 5
+    );
     return () => {
       clearInterval(interval);
     };
-  }, [getCurrPlaying, token]);
+  }, [dispatch]);
   useEffect(() => {
     const interval = setInterval(() => {
       if (

@@ -10,6 +10,7 @@ import { setToken } from "./reducers/authReducer";
 import styled, { ThemeProvider } from "styled-components";
 import { appWidth, nowPlayingHeight, appHeight } from "./vars";
 import { Authorize } from "./components/Authorize";
+import { Helmet } from "react-helmet";
 
 const AppWrapper = styled.div`
   transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -52,6 +53,7 @@ const App = () => {
   const token = useTypedSelector(state => state.auth.token);
   const bgColor = useTypedSelector(state => state.ui.bgColor);
   const textColor = useTypedSelector(state => state.ui.textColor);
+  const songData = useTypedSelector(state => state.player.songData);
   useEffect(() => {
     const qry = queryString.parse(window.location.hash.substring(1));
     window.location.hash = "";
@@ -74,16 +76,31 @@ const App = () => {
       }}
     >
       <AppWrapper>
-        {token === "" ? (
-          <Authorize />
-        ) : (
-          <>
-            <NowPlaying imgRef={imgRef} />
-            <Playlists />
-            <Queue />
-            <Search />
-          </>
-        )}
+        <>
+          {token === "" ? (
+            <Authorize />
+          ) : (
+            <>
+              <NowPlaying imgRef={imgRef} />
+              <Playlists />
+              <Queue />
+              <Search />
+            </>
+          )}
+          {songData !== null ? (
+            <Helmet>
+              <title>
+                {songData?.artists?.map(artist => artist.name).join(", ") +
+                  " - " +
+                  songData?.name}
+              </title>
+            </Helmet>
+          ) : (
+            <Helmet>
+              <title>Spotti</title>
+            </Helmet>
+          )}
+        </>
       </AppWrapper>
     </ThemeProvider>
   );

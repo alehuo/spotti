@@ -18,14 +18,16 @@ import {
   setCurrentMs,
   setSongData,
   SET_CURRENT_TRACK_EPIC,
-  setCurrentTrack_epic
+  setCurrentTrack_epic,
+  setVolume
 } from "../reducers/playerReducer";
 import {
   startPlayingTrack,
   pausePlayback,
   continuePlayback,
   startPlayingPlaylist,
-  getCurrentlyPlaying
+  getCurrentlyPlaying,
+  getPlayerStatus
 } from "../services/PlaybackService";
 import { RootState } from "../reducers/rootReducer";
 import { getTrack } from "../services/SearchService";
@@ -99,9 +101,27 @@ export const setCurrentTrackEpic: Epic<any, any, RootState> = (
     switchMap(_action =>
       from(getCurrentlyPlaying(state$.value.auth.token)).pipe(
         throttleTime(1500),
-        filter(res => res.status === 200),
-        switchMap(res => getTrack(state$.value.auth.token, res.data.item.id)),
-        map(response => setSongData(response.data)),
+        filter(currentlyPlayingRes => currentlyPlayingRes.status === 200),
+        switchMap(currentlyPlayingRes =>
+          from(
+            getTrack(state$.value.auth.token, currentlyPlayingRes.data.item.id)
+          ).pipe(
+            switchMap(trackResponse =>
+              from(getPlayerStatus(state$.value.auth.token)).pipe(
+                filter(
+                  playerStatusResponse => playerStatusResponse.status === 200
+                ),
+                switchMap(playerStatusResponse =>
+                  of(
+                    setCurrentMs(currentlyPlayingRes.data.progress_ms),
+                    setSongData(trackResponse.data),
+                    setVolume(playerStatusResponse.data.device.volume_percent)
+                  )
+                )
+              )
+            )
+          )
+        ),
         retry(2)
       )
     )

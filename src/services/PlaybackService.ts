@@ -110,6 +110,49 @@ interface RootObject {
   is_playing: boolean;
 }
 
+export interface Device {
+  id: string;
+  is_active: boolean;
+  is_restricted: boolean;
+  name: string;
+  type: string;
+  volume_percent: number;
+}
+
+export interface PlayerDisallows {
+  resuming: boolean;
+}
+
+export interface PlayerActions {
+  disallows: PlayerDisallows;
+}
+
+export interface PlayerItem {}
+
+export interface PlayerExternalUrls {
+  spotify: string;
+}
+
+export interface PlayerContext {
+  external_urls: PlayerExternalUrls;
+  href: string;
+  type: string;
+  uri: string;
+}
+
+export interface PlayerStatus {
+  timestamp: number;
+  device: Device;
+  progress_ms: string;
+  is_playing: boolean;
+  currently_playing_type: string;
+  actions: PlayerActions;
+  item: PlayerItem;
+  shuffle_state: boolean;
+  repeat_state: string;
+  context: PlayerContext;
+}
+
 export const startPlayingPlaylist = async (
   token: string,
   contextUri: string
@@ -149,6 +192,13 @@ export const startPlayingTrack = async (
 export const getCurrentlyPlaying = async (token: string) => {
   const res = await customAxios(token).get<RootObject>(
     "https://api.spotify.com/v1/me/player/currently-playing"
+  );
+  return res;
+};
+
+export const getPlayerStatus = async (token: string) => {
+  const res = await customAxios(token).get<PlayerStatus>(
+    "https://api.spotify.com/v1/me/player"
   );
   return res;
 };
