@@ -9,7 +9,7 @@ import { AppDispatch, useTypedSelector } from "./reducers/rootReducer";
 import { setToken } from "./reducers/authReducer";
 import styled, { ThemeProvider } from "styled-components";
 import { appWidth, nowPlayingHeight, appHeight } from "./vars";
-import { authUrl } from "./services/AuthService";
+import { Authorize } from "./components/Authorize";
 
 const AppWrapper = styled.div`
   transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -30,23 +30,20 @@ const AppWrapper = styled.div`
     "playlist search";
 `;
 
-AppWrapper.defaultProps = {
-  theme: {
-    bgColor: "black",
-    color: "white"
-  }
+const defaultTheme = {
+  bgColor: "black",
+  color: "white",
+  green1: "rgb(80, 217, 80)",
+  darkBlue1: "rgb(6, 7, 15)",
+  black1: "black",
+  white1: "white"
 };
 
-const AuthorizeLink = styled.a`
-  color: white;
-  padding: 16px;
-  text-decoration: none;
-  &:visited,
-  :active,
-  :hover {
-    color: white;
+AppWrapper.defaultProps = {
+  theme: {
+    ...defaultTheme
   }
-`;
+};
 
 const imgRef = React.createRef<HTMLImageElement>();
 
@@ -69,13 +66,16 @@ const App = () => {
   return (
     <ThemeProvider
       theme={{
-        bgColor,
-        textColor
+        ...defaultTheme,
+        ...{
+          bgColor,
+          textColor
+        }
       }}
     >
       <AppWrapper>
         {token === "" ? (
-          <AuthorizeLink href={authUrl}>Authorize Spotify</AuthorizeLink>
+          <Authorize />
         ) : (
           <>
             <NowPlaying imgRef={imgRef} />
