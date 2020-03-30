@@ -104,6 +104,7 @@ const SearchResultOptions = styled.div`
 export const Search: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const token = useTypedSelector(state => state.auth.token);
+  const queueItems = useTypedSelector(state => state.queue.queueItems);
   const [searchResults, setSearchResults] = useState<Item[]>([]);
   const [searchText, setSearchText] = useState("");
   const [searchResultsCount, setSearchResultCount] = useState(0);
@@ -179,13 +180,15 @@ export const Search: React.FC = () => {
                     .join(", ")}
                 </SearchResultArtist>
                 <SearchResultOptions>
-                  <Button
-                    onClick={() =>
-                      dispatch(playSong_epic(searchRes.uri, searchRes.id))
-                    }
-                  >
-                    <FontAwesomeIcon icon={faPlay} />
-                  </Button>
+                  {queueItems.length === 0 && (
+                    <Button
+                      onClick={() =>
+                        dispatch(playSong_epic(searchRes.uri, searchRes.id))
+                      }
+                    >
+                      <FontAwesomeIcon icon={faPlay} />
+                    </Button>
+                  )}
                   <Button
                     onClick={() => {
                       que(searchRes);

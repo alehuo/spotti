@@ -3,6 +3,8 @@ import { Logo } from "./ui/Logo";
 import { authUrl } from "../services/AuthService";
 import { AuthorizeLink } from "./ui/AuthorizeLink";
 import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpotify, faGithub } from "@fortawesome/free-brands-svg-icons";
 
 const AuthorizeWrapper = styled.div`
   background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
@@ -17,18 +19,35 @@ const AuthorizeWrapper = styled.div`
 const ContentWrapper = styled.div`
   padding: 16px;
   display: flex;
+  text-align: center;
+  flex-direction: column;
   align-content: center;
   justify-content: center;
   align-self: center;
 `;
 
+const Link = styled.a`
+  color: ${props => props.theme.green1};
+  font-size: 14pt;
+`;
+
 export const Authorize: React.FC = () => (
   <AuthorizeWrapper>
     <ContentWrapper>
-      <Logo>Spotti</Logo>
+      <Logo>SPOTTI</Logo>
+      <p>A Spotify webplayer.</p>
+      <p>
+        <Link href="https://github.com/alehuo/spotify-web-dashboard" target="__blank" rel="noreferrer noopener">
+          <FontAwesomeIcon icon={faGithub} />
+          &nbsp;&nbsp;Source code
+        </Link>
+      </p>
     </ContentWrapper>
     <ContentWrapper>
-      <AuthorizeLink href={authUrl}>Authorize Spotify</AuthorizeLink>
+      <AuthorizeLink href={authUrl}>
+        <FontAwesomeIcon icon={faSpotify} />
+        &nbsp;&nbsp;Authorize Spotify
+      </AuthorizeLink>
     </ContentWrapper>
   </AuthorizeWrapper>
 );

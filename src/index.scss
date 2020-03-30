@@ -13,7 +13,7 @@ body {
   margin: 0;
   font-family: "Open Sans", sans-serif;
   font-weight: 300;
-  font-size: calc(10px + 2vmin);
+  font-size: 15pt;
   height: $app-height;
   width: $app-width;
 }
@@ -40,4 +40,8 @@ progress[value]::-webkit-progress-value {
 progress[value]::-webkit-progress-bar {
   border-radius: 5px;
   background-color: rgba(31, 34, 41, 0.534);
+}
+
+a, a:visited, a:active, a:hover {
+  text-decoration: none;
 }

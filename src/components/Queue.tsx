@@ -3,7 +3,7 @@ import { useTypedSelector } from "../reducers/rootReducer";
 import styled from "styled-components";
 
 const QueueTitle = styled.div`
-  height: 48px;
+  height: 32px;
 `;
 
 const QueueWrapper = styled.div`
@@ -14,8 +14,9 @@ const QueueWrapper = styled.div`
 
 const QueueContents = styled.div`
   width: 100%;
-  height: calc(100% - 48px);
-  font-size: 0.8em;
+  height: calc(100% - 32px);
+  overflow-y: scroll;
+  font-size: 0.7em;
 `;
 
 const QueueList = styled.ol``;
@@ -26,7 +27,7 @@ export const Queue: React.FC = () => {
   const queueItems = useTypedSelector(state => state.queue.queueItems);
   return (
     <QueueWrapper>
-      <QueueTitle>Current queue</QueueTitle>
+      <QueueTitle>Current queue ({queueItems.length})</QueueTitle>
       <QueueContents>
         <QueueList>
           {queueItems.map((queueItem, i) => (

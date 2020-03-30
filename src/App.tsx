@@ -25,7 +25,7 @@ const AppWrapper = styled.div`
   grid-template-rows: ${nowPlayingHeight} 1fr 1fr 1fr;
   grid-template-areas:
     "nowplaying queue"
-    "playlist queue"
+    "playlist search"
     "playlist search"
     "playlist search"
     "playlist search";
