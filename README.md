@@ -25,9 +25,9 @@ This repository contains a Spotify Web Dashboard implementation, built with Reac
 
 You need to create a new application in https://developer.spotify.com/dashboard to get the Client ID.
 
-- Run `yarn install`
+- Run `npm install`
 - Set environment variables (see `.env.example`)
-- Run `yarn start`
+- Run `npm start`
 
 ## License
 
