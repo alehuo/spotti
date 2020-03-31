@@ -17,9 +17,11 @@ import {
 } from "../reducers/playerReducer";
 
 const VolumeSlider = styled.input`
-  overflow: hidden;
+  grid-area: volume;
   -webkit-appearance: none;
-  width: 50%;
+  width: 100%;
+  align-self: center;
+  align-content: center;
   border-radius: 5px;
   outline: none;
   -webkit-transition: 0.2s;
@@ -59,6 +61,9 @@ const VolumeSlider = styled.input`
   }
 `;
 const PlayerWrapper = styled.div`
+  display: grid;
+  grid-template-columns: 60px calc(100% - 120px) 60px;
+  grid-template-areas: "playpause volume misc";
   width: 100%;
   height: 100%;
 `;
@@ -161,12 +166,18 @@ export const Player: React.FC = () => {
   return (
     <PlayerWrapper>
       {(status === PlayerStatus.PAUSED || status === PlayerStatus.INITIAL) && (
-        <Button onClick={() => dispatch(continuePlayback())}>
+        <Button
+          style={{ gridArea: "playpause" }}
+          onClick={() => dispatch(continuePlayback())}
+        >
           <FontAwesomeIcon icon={faPlayCircle} />
         </Button>
       )}
       {status === PlayerStatus.PLAYING && (
-        <Button onClick={() => dispatch(pausePlayback())}>
+        <Button
+          style={{ gridArea: "playpause" }}
+          onClick={() => dispatch(pausePlayback())}
+        >
           <FontAwesomeIcon icon={faPauseCircle} />
         </Button>
       )}
