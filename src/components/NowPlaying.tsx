@@ -43,22 +43,21 @@ const NowPlayingWrapper = styled.div`
     "albumart songdata";
 `;
 
-const AlbumArt = styled.div`
-  text-align: left;
+const AlbumArt = styled.img`
+  height: calc(100% - 32px);
+  width: auto;
+  object-fit: contain;
   grid-area: albumart;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  img {
-    width: ${imageWidth};
-    height: ${imageHeight};
-  }
 `;
 
 const SongData = styled.div`
   grid-area: songdata;
   width: 100%;
+  height: calc(100% - 32px);
   display: grid;
   font-size: 0.8em;
-  grid-template-rows: 36px 60px 48px auto;
+  grid-template-rows: 1fr 1fr 1fr 1fr auto;
   grid-template-columns: ${msWidth} calc(100% - ${msWidth} * 2) ${msWidth};
   grid-template-areas:
     "songname songname songname"
@@ -145,29 +144,27 @@ export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
   }, [currentMs, dispatch, songData, status]);
   return (
     <NowPlayingWrapper>
-      <AlbumArt>
-        <img
-          src={
-            songData
-              ? songData.album?.images?.filter(image => image.height === 300)[0]
-                  ?.url
-              : process.env.PUBLIC_URL + "/default_album.jpg"
-          }
-          ref={imgRef}
-          crossOrigin="anonymous"
-          alt="Album art"
-          onLoad={() => {
+      <AlbumArt
+        src={
+          songData
+            ? songData.album?.images?.filter(image => image.height === 300)[0]
+                ?.url
+            : process.env.PUBLIC_URL + "/default_album.jpg"
+        }
+        ref={imgRef}
+        crossOrigin="anonymous"
+        alt="Album art"
+        onLoad={() => {
+          // @ts-ignore
+          if (imgRef !== null && imgRef.current !== null) {
+            const colorThief = new ColorThief();
             // @ts-ignore
-            if (imgRef !== null && imgRef.current !== null) {
-              const colorThief = new ColorThief();
-              // @ts-ignore
-              const color = colorThief.getColor(imgRef.current, 50);
-              dispatch(setBgColor(`rgb(${color[0]},${color[1]},${color[2]})`));
-              dispatch(setTextColor(getContrast(color[0], color[1], color[2])));
-            }
-          }}
-        />
-      </AlbumArt>
+            const color = colorThief.getColor(imgRef.current, 50);
+            dispatch(setBgColor(`rgb(${color[0]},${color[1]},${color[2]})`));
+            dispatch(setTextColor(getContrast(color[0], color[1], color[2])));
+          }
+        }}
+      />
       <SongData>
         <SongArtist>
           <b>{songData?.artists?.map(artist => artist.name).join(", ")}</b>
