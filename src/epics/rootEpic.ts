@@ -7,6 +7,7 @@ import {
   setCurrentTrackEpic
 } from "./playerEpic";
 import { addToQueueEpic } from "./queueEpic";
+import { appInitEpic } from "./appEpic";
 
 export const rootEpic = combineEpics(
   playSongEpic,
@@ -14,5 +15,6 @@ export const rootEpic = combineEpics(
   pausePlaybackEpic,
   resumePlaybackEpic,
   addToQueueEpic,
-  setCurrentTrackEpic
+  setCurrentTrackEpic,
+  appInitEpic
 );

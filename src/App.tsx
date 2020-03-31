@@ -6,11 +6,11 @@ import { Queue } from "./components/Queue";
 import { Search } from "./components/Search";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useTypedSelector } from "./reducers/rootReducer";
-import { setToken } from "./reducers/authReducer";
 import styled, { ThemeProvider } from "styled-components";
 import { appWidth, nowPlayingHeight, appHeight } from "./vars";
 import { Authorize } from "./components/Authorize";
 import { Helmet } from "react-helmet";
+import { initApp_epic } from "./reducers/uiReducer";
 
 const AppWrapper = styled.div`
   transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -40,12 +40,6 @@ const defaultTheme = {
   white1: "white"
 };
 
-AppWrapper.defaultProps = {
-  theme: {
-    ...defaultTheme
-  }
-};
-
 const imgRef = React.createRef<HTMLImageElement>();
 
 const App = () => {
@@ -60,7 +54,7 @@ const App = () => {
     let _token = qry.access_token;
     if (_token) {
       if (!Array.isArray(_token)) {
-        dispatch(setToken(_token));
+        dispatch(initApp_epic(_token));
       }
     }
   }, [dispatch]);

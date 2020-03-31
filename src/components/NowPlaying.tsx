@@ -13,6 +13,7 @@ import {
   setCurrentMs,
   setCurrentTrack_epic
 } from "../reducers/playerReducer";
+import { Disc } from "./ui/Disc";
 interface Props {
   imgRef: React.Ref<HTMLImageElement>;
 }
@@ -93,6 +94,7 @@ const ProgressBar = styled.progress`
   width: 95%;
   margin-left: auto;
   margin-right: auto;
+  background: rgba(0, 0, 0, 0.4);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   height: 10px;
   border-radius: 5px;
@@ -146,8 +148,10 @@ export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
       <AlbumArt>
         <img
           src={
-            songData?.album?.images?.filter(image => image.height === 300)[0]
-              ?.url
+            songData
+              ? songData.album?.images?.filter(image => image.height === 300)[0]
+                  ?.url
+              : process.env.PUBLIC_URL + "/default_album.jpg"
           }
           ref={imgRef}
           crossOrigin="anonymous"
@@ -168,7 +172,15 @@ export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
         <SongArtist>
           <b>{songData?.artists?.map(artist => artist.name).join(", ")}</b>
         </SongArtist>
-        <SongName>{songData?.name}</SongName>
+        <SongName>
+          {songData?.name}
+          {songData && (
+            <>
+              &nbsp;&nbsp;&nbsp;
+              <Disc rotating={status === PlayerStatus.PLAYING} />
+            </>
+          )}
+        </SongName>
         <PlaybackControls>
           <Player />
         </PlaybackControls>

@@ -102,6 +102,7 @@ export const setCurrentTrackEpic: Epic<any, any, RootState> = (
       from(getCurrentlyPlaying(state$.value.auth.token)).pipe(
         throttleTime(1500),
         filter(currentlyPlayingRes => currentlyPlayingRes.status === 200),
+        filter(currentlyPlayingRes => currentlyPlayingRes.data !== null),
         switchMap(currentlyPlayingRes =>
           from(
             getTrack(state$.value.auth.token, currentlyPlayingRes.data.item.id)
@@ -113,6 +114,11 @@ export const setCurrentTrackEpic: Epic<any, any, RootState> = (
                 ),
                 switchMap(playerStatusResponse =>
                   of(
+                    setPlayerStatus(
+                      currentlyPlayingRes.data.is_playing
+                        ? PlayerStatus.PLAYING
+                        : PlayerStatus.PAUSED
+                    ),
                     setCurrentMs(currentlyPlayingRes.data.progress_ms),
                     setSongData(trackResponse.data),
                     setVolume(playerStatusResponse.data.device.volume_percent)

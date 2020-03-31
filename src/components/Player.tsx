@@ -16,7 +16,48 @@ import {
   setVolume
 } from "../reducers/playerReducer";
 
-const VolumeSlider = styled.input``;
+const VolumeSlider = styled.input`
+  overflow: hidden;
+  -webkit-appearance: none;
+  width: 50%;
+  border-radius: 5px;
+  outline: none;
+  -webkit-transition: 0.2s;
+  transition: opacity 0.2s;
+  background: rgba(0, 0, 0, 0.4);
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  height: 10px;
+
+  ::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: ${props => props.theme.white1};
+    cursor: pointer;
+    &:hover {
+      background: ${props => props.theme.green1};
+    }
+  }
+
+  ::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: ${props => props.theme.white1};
+    cursor: pointer;
+    &:hover {
+      background: ${props => props.theme.green1};
+    }
+  }
+
+  ::-moz-range-progress {
+    background: ${props => props.theme.white1};
+  }
+`;
 const PlayerWrapper = styled.div`
   width: 100%;
   height: 100%;

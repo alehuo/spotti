@@ -1,14 +1,17 @@
 import { Reducer, action, ActionType } from "typesafe-actions";
 
-const SET_BGCOLOR = "SET_BGCOLOR";
-const SET_TEXTCOLOR = "SET_TEXTCOLOR";
+export const SET_BGCOLOR = "SET_BGCOLOR";
+export const SET_TEXTCOLOR = "SET_TEXTCOLOR";
+export const INIT_APP_EPIC = "INIT_APP_EPIC";
 
 export const setBgColor = (bgColor: string) => action(SET_BGCOLOR, { bgColor });
 export const setTextColor = (textColor: string) =>
   action(SET_TEXTCOLOR, { textColor });
 
+export const initApp_epic = (token: string) => action(INIT_APP_EPIC, { token });
+
 export type UiReducerAction = ActionType<
-  typeof setBgColor | typeof setTextColor
+  typeof setBgColor | typeof setTextColor | typeof initApp_epic
 >;
 
 export type UiReducerState = {
