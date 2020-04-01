@@ -44,7 +44,7 @@ const NowPlayingWrapper = styled.div`
 `;
 
 const AlbumArt = styled.img`
-  height: calc(100% - 32px);
+  height: 100%;
   width: auto;
   object-fit: contain;
   grid-area: albumart;
@@ -54,7 +54,7 @@ const AlbumArt = styled.img`
 const SongData = styled.div`
   grid-area: songdata;
   width: 100%;
-  height: calc(100% - 32px);
+  height: 100%;
   display: grid;
   font-size: 0.8em;
   grid-template-rows: 1fr 1fr 1fr 1fr auto;
@@ -82,7 +82,6 @@ const SongName = styled.div`
 `;
 
 const PlaybackControls = styled.div`
-  padding-left: 16px;
   grid-area: playbackctrl;
   align-self: center;
 `;
@@ -100,7 +99,6 @@ const ProgressBar = styled.progress`
 `;
 
 const CurrentMs = styled.div`
-  padding-left: 16px;
   text-align: center;
   grid-area: currentms;
   align-self: center;

@@ -1,7 +1,7 @@
 // "Now playing"
-export const imageWidth = "calc(200px - 32px)";
+export const imageWidth = "136px";
 export const imageHeight = imageWidth;
-export const nowPlayingHeight = imageHeight;
+export const nowPlayingHeight = "calc(136px + 32px)";
 export const nowPlayingWidth = "100%";
 export const msWidth = "60px";
 // App

@@ -1,7 +1,7 @@
 // "Now playing"
-$image-width: calc(200px - 32px);
+$image-width: 136px;
 $image-height: $image-width;
-$now-playing-height: $image-height;
+$now-playing-height: $image-height + 32px;
 $now-playing-width: 100%;
 $ms-width: 60px;
 // App

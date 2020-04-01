@@ -31,6 +31,7 @@ const SearchBar = styled.div`
 `;
 
 const SearchTerm = styled.input`
+  outline: 0;
   padding: 8px;
   display: block;
   height: 100%;
@@ -40,6 +41,8 @@ const SearchTerm = styled.input`
   background-color: transparent;
   border: 0;
   border-bottom: 2px solid ${props => props.theme.textColor};
+  transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: border-bottom, color;
   font-size: 0.7em;
   ::placeholder {
     color: ${props => props.theme.textColor};
@@ -96,9 +99,10 @@ const SearchResultArtist = styled.div`
 `;
 
 const SearchResultOptions = styled.div`
+  display: flex;
   grid-area: options;
   align-self: center;
-  text-align: center;
+  justify-content: center;
 `;
 
 export const Search: React.FC = () => {

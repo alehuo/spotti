@@ -19,7 +19,8 @@ import {
 const VolumeSlider = styled.input`
   grid-area: volume;
   -webkit-appearance: none;
-  width: 100%;
+  min-width: 80px;
+  width: calc(95% / 3);
   align-self: center;
   align-content: center;
   border-radius: 5px;
@@ -27,8 +28,7 @@ const VolumeSlider = styled.input`
   -webkit-transition: 0.2s;
   transition: opacity 0.2s;
   background: rgba(0, 0, 0, 0.4);
-  margin-left: auto;
-  margin-right: auto;
+  margin-left: 2.5%;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   height: 10px;
 
