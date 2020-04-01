@@ -5,10 +5,13 @@
  * @param  {String} A hexcolor value
  * @return {String} The contrasting color (black or white)
  */
-export const getContrast = (r: number, g: number, b: number) => {
+
+import { TextColor } from "./reducers/uiReducer";
+
+export const getContrast = (r: number, g: number, b: number): TextColor => {
   // Get YIQ ratio
   const yiq = (r * 299 + g * 587 + b * 114) / 1000;
 
   // Check contrast
-  return yiq >= 128 ? "black" : "white";
+  return yiq >= 128 ? "#000000" : "#FFFFFF";
 };

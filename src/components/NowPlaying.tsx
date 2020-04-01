@@ -100,7 +100,9 @@ const ProgressBar = styled.progress`
   }
   &[value]::-webkit-progress-bar {
     border-radius: 5px;
-    background-color: rgba(0, 0, 0, 0.5);
+    transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: background-color;
+    background-color: ${props => props.theme.textColor + "75"};
   }
 
   grid-area: progressbar;

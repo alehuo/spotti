@@ -5,7 +5,7 @@ export const SET_TEXTCOLOR = "SET_TEXTCOLOR";
 export const INIT_APP_EPIC = "INIT_APP_EPIC";
 
 export const setBgColor = (bgColor: string) => action(SET_BGCOLOR, { bgColor });
-export const setTextColor = (textColor: string) =>
+export const setTextColor = (textColor: TextColor) =>
   action(SET_TEXTCOLOR, { textColor });
 
 export const initApp_epic = (token: string) => action(INIT_APP_EPIC, { token });
@@ -14,14 +14,16 @@ export type UiReducerAction = ActionType<
   typeof setBgColor | typeof setTextColor | typeof initApp_epic
 >;
 
+export type TextColor = "#FFFFFF" | "#000000";
+
 export type UiReducerState = {
   readonly bgColor: string;
-  readonly textColor: string;
+  readonly textColor: TextColor;
 };
 
 const initialState: UiReducerState = {
   bgColor: "#D87260",
-  textColor: "white"
+  textColor: "#FFFFFF"
 };
 
 export const uiReducer: Reducer<UiReducerState, UiReducerAction> = (

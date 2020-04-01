@@ -10,4 +10,4 @@ export const appWidth = "100vw";
 // Playlist
 export const playlistItemHeight = "100px";
 // Colors
-export const textColor = "rgb(255, 255, 255)";
+export const textColor = "#000000FF";
