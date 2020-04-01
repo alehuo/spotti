@@ -9,8 +9,8 @@ This repository contains a Spotify Web Dashboard implementation, built with Reac
 - TypeScript
 - React.js
 - Styled Components
-- React Redux + RxJS + redux-observable
-- Spotify Wek SDK
+- Redux + RxJS + redux-observable
+- Spotify Web SDK
 
 ## Features
 
