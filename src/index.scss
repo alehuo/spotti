@@ -28,20 +28,6 @@ code {
   height: 100%;
 }
 
-progress[value] {
-  -webkit-appearance: none;
-  appearance: none;
-  height: 10px;
-}
-progress[value]::-webkit-progress-value {
-  border-radius: 5px;
-  background-color: rgb(197, 197, 197);
-}
-progress[value]::-webkit-progress-bar {
-  border-radius: 5px;
-  background-color: rgba(31, 34, 41, 0.534);
-}
-
 a, a:visited, a:active, a:hover {
   text-decoration: none;
 }

@@ -87,12 +87,27 @@ const PlaybackControls = styled.div`
 `;
 
 const ProgressBar = styled.progress`
+  &[value] {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 10px;
+  }
+  &[value]::-webkit-progress-value {
+    border-radius: 5px;
+    background-color: ${props => props.theme.textColor};
+    transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: background-color;
+  }
+  &[value]::-webkit-progress-bar {
+    border-radius: 5px;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
   grid-area: progressbar;
   align-self: center;
   width: 95%;
   margin-left: auto;
   margin-right: auto;
-  background: rgba(0, 0, 0, 0.4);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   height: 10px;
   border-radius: 5px;

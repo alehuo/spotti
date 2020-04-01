@@ -25,39 +25,41 @@ const VolumeSlider = styled.input`
   align-content: center;
   border-radius: 5px;
   outline: none;
-  -webkit-transition: 0.2s;
-  transition: opacity 0.2s;
-  background: rgba(0, 0, 0, 0.4);
   margin-left: 2.5%;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
   height: 10px;
+  background-color: rgba(0, 0, 0, 0.5);
 
   ::-webkit-slider-thumb {
+    transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: background-color;
     -webkit-appearance: none;
     appearance: none;
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: ${props => props.theme.white1};
+    background-color: ${props => props.theme.textColor};
     cursor: pointer;
     &:hover {
-      background: ${props => props.theme.green1};
+      background-color: ${props => props.theme.green1};
     }
   }
 
   ::-moz-range-thumb {
+    transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-property: background-color;
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: ${props => props.theme.white1};
+    background-color: ${props => props.theme.textColor};
     cursor: pointer;
     &:hover {
-      background: ${props => props.theme.green1};
+      background-color: ${props => props.theme.green1};
     }
   }
 
   ::-moz-range-progress {
-    background: ${props => props.theme.white1};
+    background: ${props => props.theme.textColor};
   }
 `;
 const PlayerWrapper = styled.div`
