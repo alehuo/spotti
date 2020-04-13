@@ -70,6 +70,11 @@ const SearchResults = styled.div`
   row-gap: 8px;
   align-items: center;
   justify-content: center;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  &::-webkit-scrollbar {
+    width: 0px;
+  }
 `;
 
 const SearchResult = styled.div`
