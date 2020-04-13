@@ -15,3 +15,13 @@ export const getContrast = (r: number, g: number, b: number): TextColor => {
   // Check contrast
   return yiq >= 128 ? "#000000" : "#FFFFFF";
 };
+
+export const trimLength = (input: string | undefined, len: number = 48) => {
+  if (input === undefined) {
+    return "";
+  }
+  if (input.length > len) {
+    return input.substring(0, len - 3) + "...";
+  }
+  return input;
+};

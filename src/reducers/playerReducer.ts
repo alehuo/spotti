@@ -4,7 +4,7 @@ import { Item } from "../services/SearchService";
 export enum PlayerStatus {
   PLAYING,
   PAUSED,
-  INITIAL
+  INITIAL,
 }
 
 export const SET_PLAYER_STATUS = "SET_PLAYER_STATUS";
@@ -17,6 +17,7 @@ export const PLAY_PLAYLIST = "PLAY_PLAYLIST";
 export const SET_DEVICE_ID = "SET_DEVICE_ID";
 export const SET_SONG_DATA = "SET_SONG_DATA";
 export const SET_VOLUME = "SET_VOLUME";
+export const CLEAR_ALL_PLAYER_DATA = "CLEAR_ALL_PLAYER_DATA";
 
 export const playSong_epic = (uri: string, id: string) =>
   action(PLAY_SONG, { uri, id });
@@ -41,6 +42,7 @@ export const setVolume = (volumePercent: number) =>
   action(SET_VOLUME, { volumePercent });
 
 export const setCurrentTrack_epic = () => action(SET_CURRENT_TRACK_EPIC);
+export const clearAllPlayerData = () => action(CLEAR_ALL_PLAYER_DATA);
 
 export type PlayerReducerAction = ActionType<
   | typeof setPlayerStatus
@@ -53,6 +55,7 @@ export type PlayerReducerAction = ActionType<
   | typeof setSongData
   | typeof setCurrentTrack_epic
   | typeof setVolume
+  | typeof clearAllPlayerData
 >;
 
 export type PlayerReducerState = {
@@ -68,7 +71,7 @@ const initialState: PlayerReducerState = {
   deviceId: "",
   currentMs: 0,
   songData: null,
-  volumePercent: 50
+  volumePercent: 50,
 };
 
 export const playerReducer: Reducer<PlayerReducerState, PlayerReducerAction> = (
@@ -86,6 +89,8 @@ export const playerReducer: Reducer<PlayerReducerState, PlayerReducerAction> = (
       return { ...state, songData: { ...action.payload.songData } };
     case SET_VOLUME:
       return { ...state, volumePercent: action.payload.volumePercent };
+    case CLEAR_ALL_PLAYER_DATA:
+      return { ...state, ...initialState };
     default:
       return { ...state };
   }

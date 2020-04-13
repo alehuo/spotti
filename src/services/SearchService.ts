@@ -94,13 +94,28 @@ export interface RootObject {
   tracks: Tracks;
 }
 
-export const search = async (token: string, searchTerm: string) => {
+export const searchTracks = async (token: string, searchTerm: string) => {
   const res = await customAxios(token).get<RootObject>(
     "https://api.spotify.com/v1/search",
     {
       params: {
         q: searchTerm,
-        type: "track"
+        type: "track",
+        limit: 50
+      }
+    }
+  );
+  return res;
+};
+
+export const searchAlbums = async (token: string, searchTerm: string) => {
+  const res = await customAxios(token).get<RootObject>(
+    "https://api.spotify.com/v1/search",
+    {
+      params: {
+        q: searchTerm,
+        type: "album",
+        limit: 50
       }
     }
   );

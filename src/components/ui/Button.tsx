@@ -10,6 +10,5 @@ export const Button = styled.button`
   font-size: 1.6em;
   &:hover {
     cursor: pointer;
-    color: ${props => props.theme.green1};
   }
 `;

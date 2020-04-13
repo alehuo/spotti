@@ -5,13 +5,13 @@ import ColorThief from "colorthief";
 import { setBgColor, setTextColor } from "../reducers/uiReducer";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useTypedSelector } from "../reducers/rootReducer";
-import { getContrast } from "../utils";
+import { getContrast, trimLength } from "../utils";
 import styled from "styled-components";
 import { imageWidth, imageHeight, msWidth } from "../vars";
 import {
   PlayerStatus,
   setCurrentMs,
-  setCurrentTrack_epic
+  setCurrentTrack_epic,
 } from "../reducers/playerReducer";
 import { Disc } from "./ui/Disc";
 interface Props {
@@ -69,7 +69,6 @@ const SongData = styled.div`
 const SongArtist = styled.div`
   padding-left: 16px;
   text-align: left;
-  font-weight: bold;
   grid-area: artist;
   align-self: top;
 `;
@@ -78,6 +77,7 @@ const SongName = styled.div`
   padding-left: 16px;
   text-align: left;
   align-self: center;
+  font-weight: bold;
   grid-area: songname;
 `;
 
@@ -94,7 +94,7 @@ const ProgressBar = styled.progress`
   }
   &[value]::-webkit-progress-value {
     border-radius: 5px;
-    background-color: ${props => props.theme.textColor};
+    background-color: ${(props) => props.theme.textColor};
     transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
     transition-property: background-color;
   }
@@ -102,7 +102,7 @@ const ProgressBar = styled.progress`
     border-radius: 5px;
     transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
     transition-property: background-color;
-    background-color: ${props => props.theme.textColor + "75"};
+    background-color: ${(props) => props.theme.textColor + "75"};
   }
 
   grid-area: progressbar;
@@ -128,9 +128,9 @@ const DurationMs = styled.div`
 `;
 
 export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
-  const status = useTypedSelector(state => state.player.playerStatus);
-  const songData = useTypedSelector(state => state.player.songData);
-  const currentMs = useTypedSelector(state => state.player.currentMs);
+  const status = useTypedSelector((state) => state.player.playerStatus);
+  const songData = useTypedSelector((state) => state.player.songData);
+  const currentMs = useTypedSelector((state) => state.player.currentMs);
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -162,7 +162,7 @@ export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
       <AlbumArt
         src={
           songData
-            ? songData.album?.images?.filter(image => image.height === 300)[0]
+            ? songData.album?.images?.filter((image) => image.height === 300)[0]
                 ?.url
             : process.env.PUBLIC_URL + "/default_album.jpg"
         }
@@ -182,10 +182,12 @@ export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
       />
       <SongData>
         <SongArtist>
-          <b>{songData?.artists?.map(artist => artist.name).join(", ")}</b>
+          {trimLength(
+            songData?.artists?.map((artist) => artist.name).join(", ")
+          )}
         </SongArtist>
         <SongName>
-          {songData?.name}
+          {trimLength(songData?.name)}
           {songData && (
             <>
               &nbsp;&nbsp;&nbsp;

@@ -13,8 +13,9 @@ import {
   continuePlayback,
   pausePlayback,
   setDeviceId,
-  setVolume
+  setVolume,
 } from "../reducers/playerReducer";
+import { resetApp_epic } from "../reducers/uiReducer";
 
 const VolumeSlider = styled.input`
   grid-area: volume;
@@ -30,7 +31,7 @@ const VolumeSlider = styled.input`
   height: 10px;
   transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
   transition-property: background-color;
-  background-color: ${props => props.theme.textColor + "75"};
+  background-color: ${(props) => props.theme.textColor + "75"};
 
   ::-webkit-slider-thumb {
     transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -40,10 +41,10 @@ const VolumeSlider = styled.input`
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background-color: ${props => props.theme.textColor};
+    background-color: ${(props) => props.theme.textColor};
     cursor: pointer;
     &:hover {
-      background-color: ${props => props.theme.green1};
+      background-color: ${(props) => props.theme.green1};
     }
   }
 
@@ -53,15 +54,15 @@ const VolumeSlider = styled.input`
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background-color: ${props => props.theme.textColor};
+    background-color: ${(props) => props.theme.textColor};
     cursor: pointer;
     &:hover {
-      background-color: ${props => props.theme.green1};
+      background-color: ${(props) => props.theme.green1};
     }
   }
 
   ::-moz-range-progress {
-    background: ${props => props.theme.textColor};
+    background: ${(props) => props.theme.textColor};
   }
 `;
 const PlayerWrapper = styled.div`
@@ -75,23 +76,23 @@ const PlayerWrapper = styled.div`
 const debouncedVolumeChange = debounce(
   (token: string, volume: number, deviceId: string) => {
     console.log("Called");
-    changeVolume(token, volume, deviceId).catch(err => console.error(err));
+    changeVolume(token, volume, deviceId).catch((err) => console.error(err));
   },
   700,
   {
     leading: false,
-    trailing: true
+    trailing: true,
   }
 );
 
 export const Player: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
-  const token = useTypedSelector(state => state.auth.token);
-  const status = useTypedSelector(state => state.player.playerStatus);
-  const deviceId = useTypedSelector(state => state.player.deviceId);
+  const token = useTypedSelector((state) => state.auth.token);
+  const status = useTypedSelector((state) => state.player.playerStatus);
+  const deviceId = useTypedSelector((state) => state.player.deviceId);
 
   const [player, setPlayer] = useState<any>(null);
-  const volume = useTypedSelector(state => state.player.volumePercent);
+  const volume = useTypedSelector((state) => state.player.volumePercent);
   const [connected, setConnected] = useState(false);
   const initClient = useCallback(() => {
     // @ts-ignore
@@ -100,7 +101,7 @@ export const Player: React.FC = () => {
       getOAuthToken: (cb: (token: string) => void) => {
         cb(token);
       },
-      volume: 0.5
+      volume: 0.5,
     });
     // @ts-ignore
     player.on("initialization_error", ({ message }) => {
@@ -108,6 +109,8 @@ export const Player: React.FC = () => {
     });
     // @ts-ignore
     player.on("authentication_error", ({ message }) => {
+      dispatch(resetApp_epic());
+      localStorage.removeItem("spotify_key");
       console.error("Failed to authenticate", message);
     });
     // @ts-ignore
@@ -165,7 +168,7 @@ export const Player: React.FC = () => {
   );
 
   if (player == null || !connected || deviceId === "") {
-    return <PlayerWrapper>Loading player...</PlayerWrapper>;
+    return <PlayerWrapper style={{padding: 16}}>Loading player...</PlayerWrapper>;
   }
   return (
     <PlayerWrapper>

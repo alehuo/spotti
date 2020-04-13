@@ -6,7 +6,7 @@ import {
   map,
   throttleTime,
   debounceTime,
-  retry
+  retry,
 } from "rxjs/operators";
 import {
   PLAY_SONG,
@@ -19,7 +19,7 @@ import {
   setSongData,
   SET_CURRENT_TRACK_EPIC,
   setCurrentTrack_epic,
-  setVolume
+  setVolume,
 } from "../reducers/playerReducer";
 import {
   startPlayingTrack,
@@ -27,7 +27,7 @@ import {
   continuePlayback,
   startPlayingPlaylist,
   getCurrentlyPlaying,
-  getPlayerStatus
+  getPlayerStatus,
 } from "../services/PlaybackService";
 import { RootState } from "../reducers/rootReducer";
 import { getTrack } from "../services/SearchService";
@@ -36,12 +36,14 @@ export const playSongEpic: Epic<any, any, RootState> = (action$, state$) =>
   action$.pipe(
     ofType(PLAY_SONG),
     throttleTime(1500),
-    switchMap(action =>
+    switchMap((action) =>
       from(startPlayingTrack(state$.value.auth.token, action.payload.uri)).pipe(
-        filter(response => response.status === 204),
-        switchMap(_res => getTrack(state$.value.auth.token, action.payload.id)),
-        filter(response => response.status === 200),
-        switchMap(res =>
+        filter((response) => response.status === 204),
+        switchMap((_res) =>
+          getTrack(state$.value.auth.token, action.payload.id)
+        ),
+        filter((response) => response.status === 200),
+        switchMap((res) =>
           of(
             setSongData(res.data),
             setPlayerStatus(PlayerStatus.PLAYING),
@@ -55,12 +57,12 @@ export const playSongEpic: Epic<any, any, RootState> = (action$, state$) =>
 export const playPlaylistEpic: Epic<any, any, RootState> = (action$, state$) =>
   action$.pipe(
     ofType(PLAY_PLAYLIST),
-    switchMap(action =>
+    switchMap((action) =>
       startPlayingPlaylist(state$.value.auth.token, action.payload.playlistId)
     ),
-    filter(response => response.status === 204),
+    filter((response) => response.status === 204),
     debounceTime(800),
-    switchMap(_res =>
+    switchMap((_res) =>
       of(
         setPlayerStatus(PlayerStatus.PLAYING),
         setCurrentMs(0),
@@ -72,11 +74,11 @@ export const playPlaylistEpic: Epic<any, any, RootState> = (action$, state$) =>
 export const pausePlaybackEpic: Epic<any, any, RootState> = (action$, state$) =>
   action$.pipe(
     ofType(PAUSE_PLAYBACK),
-    switchMap(_action =>
+    switchMap((_action) =>
       pausePlayback(state$.value.auth.token, state$.value.player.deviceId)
     ),
-    filter(response => response.status === 204),
-    map(_response => setPlayerStatus(PlayerStatus.PAUSED))
+    filter((response) => response.status === 204),
+    map((_response) => setPlayerStatus(PlayerStatus.PAUSED))
   );
 
 export const resumePlaybackEpic: Epic<any, any, RootState> = (
@@ -85,11 +87,11 @@ export const resumePlaybackEpic: Epic<any, any, RootState> = (
 ) =>
   action$.pipe(
     ofType(CONTINUE_PLAYBACK),
-    switchMap(_action =>
+    switchMap((_action) =>
       continuePlayback(state$.value.auth.token, state$.value.player.deviceId)
     ),
-    filter(response => response.status === 204),
-    map(_response => setPlayerStatus(PlayerStatus.PLAYING))
+    filter((response) => response.status === 204),
+    map((_response) => setPlayerStatus(PlayerStatus.PLAYING))
   );
 
 export const setCurrentTrackEpic: Epic<any, any, RootState> = (
@@ -98,21 +100,21 @@ export const setCurrentTrackEpic: Epic<any, any, RootState> = (
 ) =>
   action$.pipe(
     ofType(SET_CURRENT_TRACK_EPIC),
-    switchMap(_action =>
+    switchMap((_action) =>
       from(getCurrentlyPlaying(state$.value.auth.token)).pipe(
         throttleTime(1500),
-        filter(currentlyPlayingRes => currentlyPlayingRes.status === 200),
-        filter(currentlyPlayingRes => currentlyPlayingRes.data !== null),
-        switchMap(currentlyPlayingRes =>
+        filter((currentlyPlayingRes) => currentlyPlayingRes.status === 200),
+        filter((currentlyPlayingRes) => currentlyPlayingRes.data !== null),
+        switchMap((currentlyPlayingRes) =>
           from(
             getTrack(state$.value.auth.token, currentlyPlayingRes.data.item.id)
           ).pipe(
-            switchMap(trackResponse =>
+            switchMap((trackResponse) =>
               from(getPlayerStatus(state$.value.auth.token)).pipe(
                 filter(
-                  playerStatusResponse => playerStatusResponse.status === 200
+                  (playerStatusResponse) => playerStatusResponse.status === 200
                 ),
-                switchMap(playerStatusResponse =>
+                switchMap((playerStatusResponse) =>
                   of(
                     setPlayerStatus(
                       currentlyPlayingRes.data.is_playing

@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import queryString from "query-string";
 import { NowPlaying } from "./components/NowPlaying";
-import { Playlists } from "./components/Playlists";
 import { Queue } from "./components/Queue";
 import { Search } from "./components/Search";
 import { useDispatch } from "react-redux";
@@ -15,20 +14,17 @@ import { initApp_epic } from "./reducers/uiReducer";
 const AppWrapper = styled.div`
   transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
   transition-property: background-color, color;
-  background-color: ${props => props.theme.bgColor};
-  color: ${props => props.theme.textColor};
+  background-color: ${(props) => props.theme.bgColor};
+  color: ${(props) => props.theme.textColor};
   box-sizing: border-box;
   width: ${appWidth};
   height: ${appHeight};
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: ${nowPlayingHeight} 1fr 1fr 1fr;
+  grid-template-columns: minmax(450px, 600px) 1fr;
+  grid-template-rows: ${nowPlayingHeight} calc(100% - ${nowPlayingHeight});
   grid-template-areas:
     "nowplaying queue"
-    "playlist search"
-    "playlist search"
-    "playlist search"
-    "playlist search";
+    "search search";
 `;
 
 const defaultTheme = {
@@ -37,25 +33,30 @@ const defaultTheme = {
   green1: "rgb(80, 217, 80)",
   darkBlue1: "rgb(6, 7, 15)",
   black1: "black",
-  white1: "white"
+  white1: "white",
 };
 
 const imgRef = React.createRef<HTMLImageElement>();
 
 const App = () => {
   const dispatch: AppDispatch = useDispatch();
-  const token = useTypedSelector(state => state.auth.token);
-  const bgColor = useTypedSelector(state => state.ui.bgColor);
-  const textColor = useTypedSelector(state => state.ui.textColor);
-  const songData = useTypedSelector(state => state.player.songData);
+  const token = useTypedSelector((state) => state.auth.token);
+  const bgColor = useTypedSelector((state) => state.ui.bgColor);
+  const textColor = useTypedSelector((state) => state.ui.textColor);
+  const songData = useTypedSelector((state) => state.player.songData);
   useEffect(() => {
     const qry = queryString.parse(window.location.hash.substring(1));
     window.location.hash = "";
-    let _token = qry.access_token;
-    if (_token) {
-      if (!Array.isArray(_token)) {
+    const _token = qry.access_token;
+
+    const storageToken = localStorage.getItem("spotify_token");
+    if (storageToken === null) {
+      if (_token && !Array.isArray(_token)) {
+        localStorage.setItem("spotify_token", _token);
         dispatch(initApp_epic(_token));
       }
+    } else {
+      dispatch(initApp_epic(storageToken));
     }
   }, [dispatch]);
 
@@ -65,8 +66,8 @@ const App = () => {
         ...defaultTheme,
         ...{
           bgColor,
-          textColor
-        }
+          textColor,
+        },
       }}
     >
       <AppWrapper>
@@ -76,7 +77,6 @@ const App = () => {
           ) : (
             <>
               <NowPlaying imgRef={imgRef} />
-              <Playlists />
               <Queue />
               <Search />
             </>
@@ -84,7 +84,7 @@ const App = () => {
           {songData !== null ? (
             <Helmet>
               <title>
-                {songData?.artists?.map(artist => artist.name).join(", ") +
+                {songData?.artists?.map((artist) => artist.name).join(", ") +
                   " - " +
                   songData?.name}
               </title>
