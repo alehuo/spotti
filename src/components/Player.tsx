@@ -75,7 +75,6 @@ const PlayerWrapper = styled.div`
 
 const debouncedVolumeChange = debounce(
   (token: string, volume: number, deviceId: string) => {
-    console.log("Called");
     changeVolume(token, volume, deviceId).catch((err) => console.error(err));
   },
   700,
@@ -109,8 +108,8 @@ export const Player: React.FC = () => {
     });
     // @ts-ignore
     player.on("authentication_error", ({ message }) => {
+      localStorage.removeItem("spotify_token");
       dispatch(resetApp_epic());
-      localStorage.removeItem("spotify_key");
       console.error("Failed to authenticate", message);
     });
     // @ts-ignore
@@ -168,7 +167,9 @@ export const Player: React.FC = () => {
   );
 
   if (player == null || !connected || deviceId === "") {
-    return <PlayerWrapper style={{padding: 16}}>Loading player...</PlayerWrapper>;
+    return (
+      <PlayerWrapper style={{ padding: 16 }}>Loading player...</PlayerWrapper>
+    );
   }
   return (
     <PlayerWrapper>

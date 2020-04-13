@@ -22,7 +22,7 @@ const SearchWrapper = styled.div`
   height: 100%;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 56px calc(100% - 56px);
+  grid-template-rows: 42px calc(100% - 42px);
 `;
 
 const SearchBar = styled.div`
@@ -33,7 +33,7 @@ const SearchBar = styled.div`
   height: 100%;
   border-radius: 48px;
   width: 70%;
-  max-width: 500px;
+  max-width: 390px;
   color: ${(props) => props.theme.bgColor};
   background-color: ${(props) => props.theme.textColor + "95"};
   transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -48,12 +48,15 @@ const SearchTerm = styled.input`
   width: 100%;
   background-color: transparent;
   align-self: center;
-  text-align: center;
+  text-align: left;
   color: ${(props) => props.theme.bgColor};
   border: 0;
-  font-size: 0.9em;
-  ::placeholder {
+  font-size: 0.8em;
+  &::placeholder {
     color: ${(props) => props.theme.bgColor};
+  }
+  &:focus::placeholder {
+    color: transparent;
   }
 `;
 
@@ -120,12 +123,23 @@ const SearchIcon = styled(FontAwesomeIcon)`
   display: block;
 `;
 
+const SearchSpacer = styled.div`
+  margin-top: 8px;
+  margin-bottom: 8px;
+  width: 100%;
+  height: 32px;
+  padding-left: 8px;
+  color: ${(props) => props.theme.textColor};
+  grid-column: 1 / -1;
+`;
+
 export const Search: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const token = useTypedSelector((state) => state.auth.token);
   const queueItems = useTypedSelector((state) => state.queue.queueItems);
   const [searchResults, setSearchResults] = useState<Item[]>([]);
   const [searchText, setSearchText] = useState("");
+  // eslint-disable-next-line no-unused-vars
   const [searchResultsCount, setSearchResultCount] = useState(0);
   const searchForTracks = useCallback(
     (searchTerm) => {
@@ -150,6 +164,8 @@ export const Search: React.FC = () => {
     debounce(searchForTracks, 800, { maxWait: 1000 }),
     []
   );
+  const hasResults =
+    searchText !== "" && searchResults && searchResults.length > 0;
   return (
     <SearchWrapper>
       <SearchBar>
@@ -173,52 +189,71 @@ export const Search: React.FC = () => {
         />
       </SearchBar>
       <SearchResults>
-        {/*searchText !== "" && searchResults && searchResults.length > 0 && (
-          <SearchResultAmount>
-            {searchResultsCount} result(s)
-          </SearchResultAmount>
-        )*/}
-        {searchText !== "" &&
-          searchResults.map((searchRes) => (
-            <SearchResult key={searchRes.id}>
-              <SearchResultImg>
-                <img
-                  src={
-                    searchRes.album.images.find(
-                      (image: any) => image.height === 64
-                    )?.url
-                  }
-                  alt=""
-                />
-              </SearchResultImg>
-              <SearchResultTrack>
-                {trimLength(searchRes.name)}
-              </SearchResultTrack>
-              <SearchResultArtist>
-                {trimLength(
-                  searchRes.artists.map((artist) => artist.name).join(", ")
-                )}
-              </SearchResultArtist>
-              <SearchResultOptions>
-                {queueItems.length === 0 && (
-                  <Button
-                    onClick={() =>
-                      dispatch(playSong_epic(searchRes.uri, searchRes.id))
+        <>
+          {hasResults && (
+            <SearchSpacer>
+              <i>{searchResultsCount}</i>{" "}
+              {searchResultsCount > 1 ? "results for " : "result for "}
+              <b>{searchText}</b>
+            </SearchSpacer>
+          )}
+          {hasResults && (
+            <SearchSpacer>
+              <b>Tracks</b>
+            </SearchSpacer>
+          )}
+          {searchText !== "" &&
+            searchResults.map((searchRes) => (
+              <SearchResult key={searchRes.id}>
+                <SearchResultImg>
+                  <img
+                    src={
+                      searchRes.album.images.find(
+                        (image: any) => image.height === 64
+                      )?.url
                     }
+                    alt=""
+                  />
+                </SearchResultImg>
+                <SearchResultTrack>
+                  {trimLength(searchRes.name)}
+                </SearchResultTrack>
+                <SearchResultArtist>
+                  {trimLength(
+                    searchRes.artists.map((artist) => artist.name).join(", ")
+                  )}
+                </SearchResultArtist>
+                <SearchResultOptions>
+                  {queueItems.length === 0 && (
+                    <Button
+                      onClick={() =>
+                        dispatch(playSong_epic(searchRes.uri, searchRes.id))
+                      }
+                    >
+                      <FontAwesomeIcon icon={faPlay} />
+                    </Button>
+                  )}
+                  <Button
+                    onClick={() => {
+                      que(searchRes);
+                    }}
                   >
-                    <FontAwesomeIcon icon={faPlay} />
+                    <FontAwesomeIcon icon={faPlusCircle} />
                   </Button>
-                )}
-                <Button
-                  onClick={() => {
-                    que(searchRes);
-                  }}
-                >
-                  <FontAwesomeIcon icon={faPlusCircle} />
-                </Button>
-              </SearchResultOptions>
-            </SearchResult>
-          ))}
+                </SearchResultOptions>
+              </SearchResult>
+            ))}
+          {hasResults && (
+            <SearchSpacer>
+              <b>Albums</b>
+            </SearchSpacer>
+          )}
+          {hasResults && (
+            <SearchSpacer>
+              <b>Playlists</b>
+            </SearchSpacer>
+          )}
+        </>
       </SearchResults>
     </SearchWrapper>
   );

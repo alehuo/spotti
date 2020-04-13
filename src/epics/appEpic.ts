@@ -1,24 +1,33 @@
 import { of } from "rxjs";
-import { Epic, ofType } from "redux-observable";
-import { concatMap } from "rxjs/operators";
+import { ofType, ActionsObservable } from "redux-observable";
+import { switchMap } from "rxjs/operators";
 import {
   setCurrentTrack_epic,
   clearAllPlayerData,
 } from "../reducers/playerReducer";
-import { RootState } from "../reducers/rootReducer";
-import { INIT_APP_EPIC, RESET_APP_EPIC } from "../reducers/uiReducer";
+import {
+  INIT_APP_EPIC,
+  RESET_APP_EPIC,
+  initApp_epic,
+  resetApp_epic,
+} from "../reducers/uiReducer";
 import { setToken, clearToken } from "../reducers/authReducer";
+import { ActionType } from "typesafe-actions";
 
-export const appInitEpic: Epic<any, any, RootState> = (action$, _state$) =>
+export const appInitEpic = (
+  action$: ActionsObservable<ActionType<typeof initApp_epic>>
+) =>
   action$.pipe(
     ofType(INIT_APP_EPIC),
-    concatMap((action) =>
+    switchMap((action) =>
       of(setToken(action.payload.token), setCurrentTrack_epic())
     )
   );
 
-export const appResetEpic: Epic<any, any, RootState> = (action$, _state$) =>
+export const appResetEpic = (
+  action$: ActionsObservable<ActionType<typeof resetApp_epic>>
+) =>
   action$.pipe(
     ofType(RESET_APP_EPIC),
-    concatMap((_action) => of(clearToken(), clearAllPlayerData()))
+    switchMap((_action) => of(clearToken, clearAllPlayerData))
   );
