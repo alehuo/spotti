@@ -1,6 +1,6 @@
 import { of } from "rxjs";
 import { ofType, ActionsObservable } from "redux-observable";
-import { switchMap } from "rxjs/operators";
+import { switchMap, mergeMap } from "rxjs/operators";
 import {
   setCurrentTrack_epic,
   clearAllPlayerData,
@@ -29,5 +29,5 @@ export const appResetEpic = (
 ) =>
   action$.pipe(
     ofType(RESET_APP_EPIC),
-    switchMap((_action) => of(clearToken, clearAllPlayerData))
+    mergeMap((_action) => of(clearToken(), clearAllPlayerData()))
   );

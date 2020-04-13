@@ -14,8 +14,9 @@ import {
   pausePlayback,
   setDeviceId,
   setVolume,
+  clearAllPlayerData,
 } from "../reducers/playerReducer";
-import { resetApp_epic } from "../reducers/uiReducer";
+import { setToken } from "../reducers/authReducer";
 
 const VolumeSlider = styled.input`
   grid-area: volume;
@@ -109,7 +110,8 @@ export const Player: React.FC = () => {
     // @ts-ignore
     player.on("authentication_error", ({ message }) => {
       localStorage.removeItem("spotify_token");
-      dispatch(resetApp_epic());
+      dispatch(setToken(""));
+      dispatch(clearAllPlayerData());
       console.error("Failed to authenticate", message);
     });
     // @ts-ignore
