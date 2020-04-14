@@ -43,15 +43,6 @@ export interface ExternalUrls3 {
   spotify: string;
 }
 
-export interface Artist2 {
-  external_urls: ExternalUrls3;
-  href: string;
-  id: string;
-  name: string;
-  type: string;
-  uri: string;
-}
-
 export interface ExternalIds {
   isrc: string;
 }
@@ -60,9 +51,9 @@ export interface ExternalUrls4 {
   spotify: string;
 }
 
-export interface Item {
+export interface TrackItem {
   album: Album;
-  artists: Artist2[];
+  artists: Artist[];
   available_markets: string[];
   disc_number: number;
   duration_ms: number;
@@ -82,7 +73,7 @@ export interface Item {
 
 export interface Tracks {
   href: string;
-  items: Item[];
+  items: TrackItem[];
   limit: number;
   next: string;
   offset: number;
@@ -90,40 +81,70 @@ export interface Tracks {
   total: number;
 }
 
-export interface RootObject {
+export interface TrackObject {
   tracks: Tracks;
 }
 
+export interface AlbumItem {
+  album_type: string;
+  artists: Artist[];
+  available_markets: string[];
+  external_urls: ExternalUrls2;
+  href: string;
+  id: string;
+  images: Image[];
+  name: string;
+  release_date: string;
+  release_date_precision: string;
+  total_tracks: number;
+  type: string;
+  uri: string;
+}
+
+export interface Albums {
+  href: string;
+  items: AlbumItem[];
+  limit: number;
+  next: string;
+  offset: number;
+  previous?: any;
+  total: number;
+}
+
+export interface AlbumObject {
+  albums: Albums;
+}
+
 export const searchTracks = async (token: string, searchTerm: string) => {
-  const res = await customAxios(token).get<RootObject>(
+  const res = await customAxios(token).get<TrackObject>(
     "https://api.spotify.com/v1/search",
     {
       params: {
         q: searchTerm,
         type: "track",
-        limit: 50
-      }
+        limit: 50,
+      },
     }
   );
   return res;
 };
 
 export const searchAlbums = async (token: string, searchTerm: string) => {
-  const res = await customAxios(token).get<RootObject>(
+  const res = await customAxios(token).get<AlbumObject>(
     "https://api.spotify.com/v1/search",
     {
       params: {
         q: searchTerm,
         type: "album",
-        limit: 50
-      }
+        limit: 50,
+      },
     }
   );
   return res;
 };
 
 export const getTrack = async (token: string, id: string) => {
-  const res = await customAxios(token).get<Item>(
+  const res = await customAxios(token).get<TrackItem>(
     `https://api.spotify.com/v1/tracks/${id}`
   );
   return res;

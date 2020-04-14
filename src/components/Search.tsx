@@ -1,5 +1,10 @@
 import React, { useState, useCallback } from "react";
-import { searchTracks, Item } from "../services/SearchService";
+import {
+  searchTracks,
+  TrackItem,
+  searchAlbums,
+  AlbumItem,
+} from "../services/SearchService";
 import { debounce } from "lodash";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -137,25 +142,33 @@ export const Search: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const token = useTypedSelector((state) => state.auth.token);
   const queueItems = useTypedSelector((state) => state.queue.queueItems);
-  const [searchResults, setSearchResults] = useState<Item[]>([]);
+  const [trackSearchResults, setTrackSearchResults] = useState<TrackItem[]>([]);
+  const [albumSearchResults, setAlbumSearchResults] = useState<AlbumItem[]>([]);
   const [searchText, setSearchText] = useState("");
   // eslint-disable-next-line no-unused-vars
   const [searchResultsCount, setSearchResultCount] = useState(0);
   const searchForTracks = useCallback(
-    (searchTerm) => {
+    async (searchTerm) => {
       if (searchTerm !== "") {
-        searchTracks(token, searchTerm).then((searchRes) => {
-          if (searchRes.data.tracks !== undefined) {
-            setSearchResults(searchRes.data.tracks.items);
-            setSearchResultCount(searchRes.data.tracks.total);
-          }
-        });
+        const [trackRes, albumRes] = await Promise.all([
+          searchTracks(token, searchTerm),
+          searchAlbums(token, searchTerm),
+        ]);
+        if (trackRes.data.tracks !== undefined) {
+          setTrackSearchResults(trackRes.data.tracks.items);
+        }
+        if (albumRes.data.albums !== undefined) {
+          setAlbumSearchResults(albumRes.data.albums.items);
+        }
+        setSearchResultCount(
+          trackRes.data.tracks.total + albumRes.data.albums.total
+        );
       }
     },
     [token]
   );
   const que = useCallback(
-    (itm: Item) => {
+    (itm: TrackItem) => {
       dispatch(addToQueue_epic(itm));
     },
     [dispatch]
@@ -165,13 +178,16 @@ export const Search: React.FC = () => {
     []
   );
   const hasResults =
-    searchText !== "" && searchResults && searchResults.length > 0;
+    searchText !== "" &&
+    trackSearchResults &&
+    albumSearchResults &&
+    (trackSearchResults.length > 0 || albumSearchResults.length > 0);
   return (
     <SearchWrapper>
       <SearchBar>
         <SearchIcon icon={faSearch} />
         <SearchTerm
-          type="text"
+          type="search"
           name="search-term"
           placeholder="Search for tracks, albums and playlists..."
           value={searchText}
@@ -180,7 +196,7 @@ export const Search: React.FC = () => {
             setSearchText(e.target.value);
             if (e.target.value === "") {
               debouncedSearch.cancel();
-              setSearchResults([]);
+              setTrackSearchResults([]);
               setSearchResultCount(0);
             } else {
               debouncedSearch(e.target.value);
@@ -202,8 +218,8 @@ export const Search: React.FC = () => {
               <b>Tracks</b>
             </SearchSpacer>
           )}
-          {searchText !== "" &&
-            searchResults.map((searchRes) => (
+          {hasResults &&
+            trackSearchResults.map((searchRes) => (
               <SearchResult key={searchRes.id}>
                 <SearchResultImg>
                   <img
@@ -248,6 +264,29 @@ export const Search: React.FC = () => {
               <b>Albums</b>
             </SearchSpacer>
           )}
+          {hasResults &&
+            albumSearchResults.map((searchRes) => (
+              <SearchResult key={searchRes.id}>
+                <SearchResultImg>
+                  <img
+                    src={
+                      searchRes.images.find((image: any) => image.height === 64)
+                        ?.url
+                    }
+                    alt=""
+                  />
+                </SearchResultImg>
+                <SearchResultTrack>
+                  {trimLength(searchRes.name)}
+                </SearchResultTrack>
+                <SearchResultArtist>
+                  {trimLength(
+                    searchRes.artists.map((artist) => artist.name).join(", ")
+                  )}
+                </SearchResultArtist>
+                <SearchResultOptions />
+              </SearchResult>
+            ))}
           {hasResults && (
             <SearchSpacer>
               <b>Playlists</b>

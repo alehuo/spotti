@@ -1,5 +1,5 @@
 import { Reducer, action, ActionType } from "typesafe-actions";
-import { Item } from "../services/SearchService";
+import { TrackItem } from "../services/SearchService";
 
 export enum PlayerStatus {
   PLAYING,
@@ -35,7 +35,7 @@ export const setPlayerStatus = (status: PlayerStatus) =>
 export const setCurrentMs = (currentMs: number) =>
   action(SET_CURRENT_MS, { currentMs });
 
-export const setSongData = (songData: Item) =>
+export const setSongData = (songData: TrackItem) =>
   action(SET_SONG_DATA, { songData });
 
 export const setVolume = (volumePercent: number) =>
@@ -62,7 +62,7 @@ export type PlayerReducerState = {
   readonly playerStatus: PlayerStatus;
   readonly deviceId: string;
   readonly currentMs: number;
-  readonly songData: Item | null;
+  readonly songData: TrackItem | null;
   readonly volumePercent: number;
 };
 

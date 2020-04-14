@@ -1,17 +1,17 @@
 import { action, ActionType, Reducer } from "typesafe-actions";
-import { Item } from "../services/SearchService";
+import { TrackItem } from "../services/SearchService";
 
 export const ADD_TO_QUEUE_EPIC = "ADD_TO_QUEUE_EPIC";
 export const ADD_TO_QUEUE = "ADD_TO_QUEUE";
 
-export const addToQueue_epic = (queueItem: Item) =>
+export const addToQueue_epic = (queueItem: TrackItem) =>
   action(ADD_TO_QUEUE_EPIC, {
-    queueItem
+    queueItem,
   });
 
-export const addSongToQueue = (queueItem: Item) =>
+export const addSongToQueue = (queueItem: TrackItem) =>
   action(ADD_TO_QUEUE, {
-    queueItem
+    queueItem,
   });
 
 export type QueueReducerAction = ActionType<
@@ -19,11 +19,11 @@ export type QueueReducerAction = ActionType<
 >;
 
 export type QueueReducerState = {
-  readonly queueItems: Item[];
+  readonly queueItems: TrackItem[];
 };
 
 const initialState: QueueReducerState = {
-  queueItems: []
+  queueItems: [],
 };
 
 export const queueReducer: Reducer<QueueReducerState, QueueReducerAction> = (
@@ -34,7 +34,7 @@ export const queueReducer: Reducer<QueueReducerState, QueueReducerAction> = (
     case ADD_TO_QUEUE:
       return {
         ...state,
-        queueItems: [...state.queueItems, action.payload.queueItem]
+        queueItems: [...state.queueItems, action.payload.queueItem],
       };
     default:
       return { ...state };
