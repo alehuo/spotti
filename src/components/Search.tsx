@@ -133,7 +133,6 @@ const SearchSpacer = styled.div`
   margin-bottom: 8px;
   width: 100%;
   height: 32px;
-  padding-left: 8px;
   color: ${(props) => props.theme.textColor};
   grid-column: 1 / -1;
 `;
