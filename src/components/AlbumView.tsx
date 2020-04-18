@@ -2,7 +2,11 @@ import React, { useEffect, useCallback, useState } from "react";
 import styled from "styled-components";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { device } from "../vars";
-import { getAlbumInfo, AlbumResponse } from "../services/AlbumService";
+import {
+  getAlbumInfo,
+  AlbumResponse,
+  AlbumItem,
+} from "../services/AlbumService";
 import { useTypedSelector } from "../reducers/rootReducer";
 import { MillisToMinutesAndSeconds, trimLength } from "../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -14,6 +18,7 @@ import {
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
+import { addToQueue_epic } from "../reducers/queueReducer";
 
 const AlbumViewWrapper = styled.div`
   position: fixed;
@@ -133,7 +138,7 @@ const AlbumView: React.FC<RouteComponentProps<{ albumId: string }>> = ({
       setAlbumData(res);
     });
   }, [match.params.albumId, token]);
-  /*const que = useCallback(
+  const que = useCallback(
     (itm: AlbumItem) => {
       dispatch(
         addToQueue_epic({
@@ -143,7 +148,7 @@ const AlbumView: React.FC<RouteComponentProps<{ albumId: string }>> = ({
       );
     },
     [dispatch]
-  );*/
+  );
   return (
     <AlbumViewWrapper
       id="album-wrapper"
@@ -205,7 +210,7 @@ const AlbumView: React.FC<RouteComponentProps<{ albumId: string }>> = ({
                   <Button
                     style={{ color: "black" }}
                     onClick={() => {
-                      // que(item);
+                      que(item);
                     }}
                   >
                     <FontAwesomeIcon icon={faPlusCircle} />

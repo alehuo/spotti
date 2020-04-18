@@ -18,7 +18,10 @@ export const addToQueueEpic: Epic<any, any, RootState> = (action$, state$) =>
           addToQueue(state$.value.auth.token, action.payload.queueItem.uri)
         ),
         filter((response) => response.status === 204),
-        map((_response) => addSongToQueue(action.payload.queueItem))
+        switchMap((_response) =>
+          getTrack(state$.value.auth.token, action.payload.queueItem.id)
+        ),
+        map((_response) => addSongToQueue(_response.data))
       )
     )
   );
