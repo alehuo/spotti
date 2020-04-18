@@ -2,7 +2,7 @@ import React from "react";
 import { useTypedSelector } from "../reducers/rootReducer";
 import { styled } from "../customStyled";
 import { TrackItem } from "../services/SearchService";
-import { MillisToMinutesAndSeconds } from "../utils";
+import { MillisToMinutesAndSeconds, trimLength } from "../utils";
 
 const QueueTitle = styled.div`
   height: 32px;
@@ -10,7 +10,8 @@ const QueueTitle = styled.div`
 
 const QueueWrapper = styled.div`
   padding: 16px;
-  width: 500px;
+  width: 100%;
+  max-width: 450px;
   height: 100%;
 `;
 
@@ -72,9 +73,12 @@ export const Queue: React.FC = () => {
               <QueueItem key={i}>
                 <QueueItemContentWrapper>
                   <div>
-                    <b>{queueItem.name}</b>
+                    <b>{trimLength(queueItem.name, 45)}</b>
                     <br />
-                    {queueItem.artists.map((artist) => artist.name).join(", ")}
+                    {trimLength(
+                      queueItem.artists.map((artist) => artist.name).join(", "),
+                      45
+                    )}
                   </div>
                   <div>
                     ( - <MillisToMinutesAndSeconds value={queueItem.seek} /> )
