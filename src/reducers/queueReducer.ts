@@ -4,7 +4,7 @@ import { TrackItem } from "../services/SearchService";
 export const ADD_TO_QUEUE_EPIC = "ADD_TO_QUEUE_EPIC";
 export const ADD_TO_QUEUE = "ADD_TO_QUEUE";
 
-export const addToQueue_epic = (queueItem: TrackItem) =>
+export const addToQueue_epic = (queueItem: { id: string; uri: string }) =>
   action(ADD_TO_QUEUE_EPIC, {
     queueItem,
   });

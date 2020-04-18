@@ -4,13 +4,16 @@ import { NowPlaying } from "./components/NowPlaying";
 import { Queue } from "./components/Queue";
 import { Search } from "./components/Search";
 import { useDispatch } from "react-redux";
-import { AppDispatch, useTypedSelector } from "./reducers/rootReducer";
+import { useTypedSelector } from "./reducers/rootReducer";
+import { AppDispatch } from "./configureStore";
 import { ThemeProvider } from "styled-components";
 import { appWidth, nowPlayingHeight, appHeight, device } from "./vars";
 import { Authorize } from "./components/Authorize";
 import { Helmet } from "react-helmet";
 import { initApp_epic } from "./reducers/uiReducer";
 import { styled, defaultTheme } from "./customStyled";
+import { Route, Switch } from "react-router-dom";
+import AlbumView from "./components/AlbumView";
 
 interface AppWrapperProps {
   authPage: boolean;
@@ -88,6 +91,15 @@ const App = () => {
             <Authorize />
           ) : (
             <>
+              <Switch>
+                <Route exact path="/album/:albumId">
+                  <AlbumView />
+                </Route>
+                <Route exact path="/playlist/:playlistId">
+                  <div>Coming soon</div>
+                </Route>
+                <Route />
+              </Switch>
               <NowPlaying imgRef={imgRef} />
               <Queue />
               <Search />

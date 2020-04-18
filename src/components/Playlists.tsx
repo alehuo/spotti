@@ -1,23 +1,24 @@
 import React, { useEffect, useCallback } from "react";
 import "./Playlists.scss";
 import { fetchPlaylists } from "../services/PlaylistService";
-import { useTypedSelector, AppDispatch } from "../reducers/rootReducer";
+import { useTypedSelector } from "../reducers/rootReducer";
 import { setPlaylists } from "../reducers/playlistReducer";
 import { useDispatch } from "react-redux";
 import { playPlaylist } from "../reducers/playerReducer";
+import { AppDispatch } from "../configureStore";
 
 export const Playlists: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
-  const token = useTypedSelector(state => state.auth.token);
-  const playlists = useTypedSelector(state => state.playlist.playlists);
+  const token = useTypedSelector((state) => state.auth.token);
+  const playlists = useTypedSelector((state) => state.playlist.playlists);
   const startPlaylist = useCallback(
-    playlistId => {
+    (playlistId) => {
       dispatch(playPlaylist(`spotify:playlist:${playlistId}`));
     },
     [dispatch]
   );
   useEffect(() => {
-    fetchPlaylists(token).then(playlists =>
+    fetchPlaylists(token).then((playlists) =>
       dispatch(setPlaylists([...playlists]))
     );
   }, [token, dispatch]);
@@ -25,7 +26,7 @@ export const Playlists: React.FC = () => {
     <div className="playlists">
       <div className="playlists-bar">Your playlists</div>
       <div className="playlist-results">
-        {playlists.map(playlist => (
+        {playlists.map((playlist) => (
           <div
             className="playlist"
             key={playlist.id}

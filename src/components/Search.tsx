@@ -12,13 +12,15 @@ import {
   faPlusCircle,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-import { useTypedSelector, AppDispatch } from "../reducers/rootReducer";
+import { useTypedSelector } from "../reducers/rootReducer";
 import { Button } from "./ui/Button";
 import { useDispatch } from "react-redux";
 import { addToQueue_epic } from "../reducers/queueReducer";
 import { styled } from "../customStyled";
 import { playSong_epic } from "../reducers/playerReducer";
 import { trimLength } from "../utils";
+import { Link } from "react-router-dom";
+import { AppDispatch } from "../configureStore";
 
 const SearchWrapper = styled.div`
   padding: 16px;
@@ -168,7 +170,12 @@ export const Search: React.FC = () => {
   );
   const que = useCallback(
     (itm: TrackItem) => {
-      dispatch(addToQueue_epic(itm));
+      dispatch(
+        addToQueue_epic({
+          id: itm.id,
+          uri: itm.uri,
+        })
+      );
     },
     [dispatch]
   );
@@ -267,13 +274,16 @@ export const Search: React.FC = () => {
             albumSearchResults.map((searchRes) => (
               <SearchResult key={searchRes.id}>
                 <SearchResultImg>
-                  <img
-                    src={
-                      searchRes.images.find((image: any) => image.height === 64)
-                        ?.url
-                    }
-                    alt=""
-                  />
+                  <Link to={`/album/${searchRes.id}`}>
+                    <img
+                      src={
+                        searchRes.images.find(
+                          (image: any) => image.height === 64
+                        )?.url
+                      }
+                      alt=""
+                    />
+                  </Link>
                 </SearchResultImg>
                 <SearchResultTrack>
                   {trimLength(searchRes.name)}
