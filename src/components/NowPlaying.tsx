@@ -5,8 +5,8 @@ import ColorThief from "colorthief";
 import { setBgColor, setTextColor } from "../reducers/uiReducer";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useTypedSelector } from "../reducers/rootReducer";
-import { getContrast, trimLength } from "../utils";
-import styled from "styled-components";
+import { getContrast, trimLength, MillisToMinutesAndSeconds } from "../utils";
+import { styled } from "../customStyled";
 import { imageWidth, imageHeight, msWidth } from "../vars";
 import {
   PlayerStatus,
@@ -17,17 +17,6 @@ import { Disc } from "./ui/Disc";
 interface Props {
   imgRef: React.Ref<HTMLImageElement>;
 }
-
-const MillisToMinutesAndSeconds: React.FC<{ value: number }> = ({ value }) => {
-  const minutes = Math.floor(value / 60000);
-  const seconds = parseInt(((value % 60000) / 1000).toFixed(0));
-  return (
-    <span>
-      {minutes}
-      {":" + (seconds < 10 ? "0" : "") + seconds}
-    </span>
-  );
-};
 
 const NowPlayingWrapper = styled.div`
   padding: 16px;

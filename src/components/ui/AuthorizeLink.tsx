@@ -1,9 +1,9 @@
-import styled from "styled-components";
+import { styled } from "../../customStyled";
 
 export const AuthorizeLink = styled.a`
-  color: ${props => props.theme.black1};
-  background-color:  ${props => props.theme.green1};
-  border: 2px solid ${props => props.theme.green1};
+  color: ${(props) => props.theme.customColors.black1};
+  background-color: ${(props) => props.theme.customColors.green1};
+  border: 2px solid ${(props) => props.theme.customColors.green1};
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   transition-property: background-color, color, border;
   display: flex;
@@ -18,7 +18,7 @@ export const AuthorizeLink = styled.a`
   font-size: 13pt;
   text-decoration: none;
   &:hover {
-    background-color: ${props => props.theme.black1};
-    color: ${props => props.theme.green1};
+    background-color: ${(props) => props.theme.customColors.black1};
+    color: ${(props) => props.theme.customColors.green1};
   }
 `;

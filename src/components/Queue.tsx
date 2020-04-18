@@ -1,6 +1,8 @@
 import React from "react";
 import { useTypedSelector } from "../reducers/rootReducer";
-import styled from "styled-components";
+import { styled } from "../customStyled";
+import { TrackItem } from "../services/SearchService";
+import { MillisToMinutesAndSeconds } from "../utils";
 
 const QueueTitle = styled.div`
   height: 32px;
@@ -8,7 +10,7 @@ const QueueTitle = styled.div`
 
 const QueueWrapper = styled.div`
   padding: 16px;
-  width: 100%;
+  width: 500px;
   height: 100%;
 `;
 
@@ -24,24 +26,62 @@ const QueueContents = styled.div`
   font-size: 0.7em;
 `;
 
-const QueueList = styled.ol``;
+const QueueList = styled.ol`
+  padding-left: 1.5em;
+`;
 
 const QueueItem = styled.li``;
 
+const QueueItemContentWrapper = styled.div`
+  display: grid;
+  grid-template-columns: calc(100% - 70px) 70px;
+`;
+
+interface TrackItemPosition {
+  seek: number;
+}
+
+const mapQueItems = (
+  items: TrackItem[],
+  currentMs: number,
+  songData: TrackItem
+): Array<TrackItem & TrackItemPosition> => {
+  let delta = 0;
+  const mappedItems = items.map((item) => {
+    const tmp = {
+      ...item,
+      seek: songData.duration_ms - currentMs + delta,
+    };
+    delta += item.duration_ms;
+    return tmp;
+  });
+  return mappedItems;
+};
+
 export const Queue: React.FC = () => {
   const queueItems = useTypedSelector((state) => state.queue.queueItems);
+  const currentMs = useTypedSelector((state) => state.player.currentMs);
+  const songData = useTypedSelector((state) => state.player.songData);
   return (
     <QueueWrapper>
       <QueueTitle>Current queue ({queueItems.length})</QueueTitle>
       <QueueContents>
         <QueueList>
-          {queueItems.map((queueItem, i) => (
-            <QueueItem key={i}>
-              {queueItem.artists.map((artist) => artist.name).join(", ")}
-              {" - "}
-              <b>{queueItem.name}</b>
-            </QueueItem>
-          ))}
+          {songData !== null &&
+            mapQueItems(queueItems, currentMs, songData).map((queueItem, i) => (
+              <QueueItem key={i}>
+                <QueueItemContentWrapper>
+                  <div>
+                    <b>{queueItem.name}</b>
+                    <br />
+                    {queueItem.artists.map((artist) => artist.name).join(", ")}
+                  </div>
+                  <div>
+                    ( - <MillisToMinutesAndSeconds value={queueItem.seek} /> )
+                  </div>
+                </QueueItemContentWrapper>
+              </QueueItem>
+            ))}
         </QueueList>
       </QueueContents>
     </QueueWrapper>

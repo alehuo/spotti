@@ -16,7 +16,7 @@ import { useTypedSelector, AppDispatch } from "../reducers/rootReducer";
 import { Button } from "./ui/Button";
 import { useDispatch } from "react-redux";
 import { addToQueue_epic } from "../reducers/queueReducer";
-import styled from "styled-components";
+import { styled } from "../customStyled";
 import { playSong_epic } from "../reducers/playerReducer";
 import { trimLength } from "../utils";
 

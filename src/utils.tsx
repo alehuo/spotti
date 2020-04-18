@@ -6,6 +6,7 @@
  * @return {String} The contrasting color (black or white)
  */
 
+import React from "react";
 import { TextColor } from "./reducers/uiReducer";
 
 export const getContrast = (r: number, g: number, b: number): TextColor => {
@@ -24,4 +25,17 @@ export const trimLength = (input: string | undefined, len: number = 48) => {
     return input.substring(0, len - 3) + "...";
   }
   return input;
+};
+
+export const MillisToMinutesAndSeconds: React.FC<{ value: number }> = ({
+  value,
+}) => {
+  const minutes = Math.floor(value / 60000);
+  const seconds = parseInt(((value % 60000) / 1000).toFixed(0));
+  return (
+    <span>
+      {minutes}
+      {":" + (seconds < 10 ? "0" : "") + seconds}
+    </span>
+  );
 };

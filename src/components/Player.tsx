@@ -6,7 +6,7 @@ import { debounce } from "lodash";
 import { changeVolume } from "../services/PlaybackService";
 import { useTypedSelector, AppDispatch } from "../reducers/rootReducer";
 import { Button } from "./ui/Button";
-import styled from "styled-components";
+import { styled } from "../customStyled";
 import { useDispatch } from "react-redux";
 import {
   PlayerStatus,
@@ -45,7 +45,7 @@ const VolumeSlider = styled.input`
     background-color: ${(props) => props.theme.textColor};
     cursor: pointer;
     &:hover {
-      background-color: ${(props) => props.theme.green1};
+      background-color: ${(props) => props.theme.customColors.green1};
     }
   }
 
@@ -58,7 +58,7 @@ const VolumeSlider = styled.input`
     background-color: ${(props) => props.theme.textColor};
     cursor: pointer;
     &:hover {
-      background-color: ${(props) => props.theme.green1};
+      background-color: ${(props) => props.theme.customColors.green1};
     }
   }
 

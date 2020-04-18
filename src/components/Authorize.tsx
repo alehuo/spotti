@@ -7,7 +7,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpotify, faGithub } from "@fortawesome/free-brands-svg-icons";
 
 const AuthorizeWrapper = styled.div`
-  background: linear-gradient(90deg, #d53369 0%, #daae51 100%);
   width: 100%;
   height: 100%;
   grid-column-start: span 2;
