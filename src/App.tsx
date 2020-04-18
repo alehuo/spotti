@@ -6,7 +6,7 @@ import { Search } from "./components/Search";
 import { useDispatch } from "react-redux";
 import { AppDispatch, useTypedSelector } from "./reducers/rootReducer";
 import { ThemeProvider } from "styled-components";
-import { appWidth, nowPlayingHeight, appHeight } from "./vars";
+import { appWidth, nowPlayingHeight, appHeight, device } from "./vars";
 import { Authorize } from "./components/Authorize";
 import { Helmet } from "react-helmet";
 import { initApp_epic } from "./reducers/uiReducer";
@@ -24,15 +24,28 @@ const AppWrapper = styled.div<AppWrapperProps>`
       ? `background: linear-gradient(90deg, #d53369 0%, #daae51 100%);`
       : `background-color: ${props.theme.bgColor};`}
   color: ${(props) => props.theme.textColor};
-  box-sizing: border-box;
   width: ${appWidth};
   height: ${appHeight};
+`;
+
+const AppGrid = styled.div`
   display: grid;
   grid-template-columns: minmax(450px, 600px) 1fr;
   grid-template-rows: ${nowPlayingHeight} calc(100% - ${nowPlayingHeight});
   grid-template-areas:
     "nowplaying queue"
     "search search";
+  height: 100%;
+  @media ${device.desktop} {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  @media ${device.uhd} {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+  }
 `;
 
 const imgRef = React.createRef<HTMLImageElement>();
@@ -70,7 +83,7 @@ const App = () => {
       }}
     >
       <AppWrapper authPage={token === ""}>
-        <>
+        <AppGrid>
           {token === "" ? (
             <Authorize />
           ) : (
@@ -93,7 +106,7 @@ const App = () => {
               <title>Spotti</title>
             </Helmet>
           )}
-        </>
+        </AppGrid>
       </AppWrapper>
     </ThemeProvider>
   );
