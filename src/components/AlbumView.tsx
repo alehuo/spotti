@@ -47,6 +47,8 @@ const AlbumViewModal = styled.div<ModalProps>`
   height: 90%;
   background-color: ${(props) => props.bgColor};
   color: ${(props) => props.textColor};
+  transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: background-color, color;
   z-index: 11;
   display: grid;
   grid-template-rows: 192px 42px calc(100% - 42px - 192px);
@@ -97,7 +99,11 @@ const TrackName = styled.div``;
 const TrackDuration = styled.div``;
 const TrackOptions = styled.div``;
 
-const AlbumTrack = styled.div`
+interface AlbumTrackProps {
+  bgColor: string;
+}
+
+const AlbumTrack = styled.div<AlbumTrackProps>`
   height: 56px;
   width: 100%;
   display: grid;
@@ -107,7 +113,7 @@ const AlbumTrack = styled.div`
   padding-left: 8px;
   font-size: 0.7em;
   &:nth-child(odd) {
-    background-color: rgba(0, 0, 0, 0.05);
+    background-color: ${(props) => props.bgColor + "30"};
   }
 `;
 
@@ -239,7 +245,7 @@ const AlbumView: React.FC<RouteComponentProps<AlbumViewProps>> = ({
           <AlbumTrackSpacer>Tracks ({albumData.total_tracks})</AlbumTrackSpacer>
           <AlbumTracks>
             {albumData.tracks.items.map((item) => (
-              <AlbumTrack key={item.id}>
+              <AlbumTrack key={item.id} bgColor={textColor}>
                 <TrackName>{item.name}</TrackName>
                 <TrackDuration>
                   <MillisToMinutesAndSeconds value={item.duration_ms} />

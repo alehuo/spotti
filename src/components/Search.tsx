@@ -73,7 +73,6 @@ const SearchTerm = styled.input`
 `;
 
 const SearchResults = styled.div`
-  padding-top: 16px;
   padding-bottom: 16px;
   height: 100%;
   width: 100%;
@@ -149,12 +148,16 @@ const SearchIcon = styled(FontAwesomeIcon)`
 `;
 
 const SearchSpacer = styled.div`
-  margin-top: 8px;
-  margin-bottom: 8px;
   width: 100%;
-  height: 32px;
+  height: 48px;
+  line-height: 48px;
   color: ${(props) => props.theme.textColor};
+  background-color: ${(props) => props.theme.bgColor};
+  transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-property: background-color, color;
   grid-column: 1 / -1;
+  position: sticky;
+  top: 0;
 `;
 
 export const Search: React.FC = () => {
