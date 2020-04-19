@@ -37,6 +37,12 @@
             "sizes": "192x192",
             "type": "imagepng",
             "density": "4.0"
+        },
+        {
+            "src": "android-icon-192x192.png",
+            "sizes": "512x512",
+            "type": "imagepng",
+            "density": "4.0"
         }
     ],
     "start_url": ".",
