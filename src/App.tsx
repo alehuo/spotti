@@ -39,6 +39,15 @@ const AppGrid = styled.div`
     "nowplaying queue"
     "search search";
   height: 100%;
+  @media ${device.mobile} {
+    width: 100%;
+    grid-template-columns: 1fr;
+    grid-template-rows: 160px 160px calc(100% - 160px - 160px);
+    grid-template-areas:
+      "nowplaying"
+      "queue"
+      "search";
+  }
   @media ${device.desktop} {
     width: 70%;
     margin-left: auto;

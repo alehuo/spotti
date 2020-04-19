@@ -34,8 +34,8 @@ const NowPlayingWrapper = styled.div`
 `;
 
 const AlbumArt = styled.img`
-  height: 100%;
-  width: auto;
+  height: auto;
+  width: 100%;
   object-fit: contain;
   grid-area: albumart;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
@@ -48,7 +48,7 @@ const SongData = styled.div`
   display: grid;
   font-size: 0.8em;
   grid-template-rows: 1fr 1fr 1fr 1fr auto;
-  grid-template-columns: ${msWidth} calc(100% - ${msWidth} * 2) ${msWidth};
+  grid-template-columns: ${msWidth} auto ${msWidth};
   grid-template-areas:
     "songname songname songname"
     "artist artist artist"
@@ -112,7 +112,7 @@ const CurrentMs = styled.div`
 `;
 
 const DurationMs = styled.div`
-  text-align: left;
+  text-align: center;
   grid-area: durationms;
   align-self: center;
 `;

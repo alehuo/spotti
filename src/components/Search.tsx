@@ -21,6 +21,7 @@ import { playSong_epic } from "../reducers/playerReducer";
 import { trimLength } from "../utils";
 import { Link } from "react-router-dom";
 import { AppDispatch } from "../configureStore";
+import { device } from "../vars";
 
 const SearchWrapper = styled.div`
   padding: 16px;
@@ -45,6 +46,10 @@ const SearchBar = styled.div`
   background-color: ${(props) => props.theme.textColor + "95"};
   transition: all 2s cubic-bezier(0.4, 0, 0.2, 1);
   transition-property: background-color, color;
+  @media ${device.mobile} {
+    max-width: 100%;
+    width: 100%;
+  }
 `;
 
 const SearchTerm = styled.input`
@@ -74,8 +79,17 @@ const SearchResults = styled.div`
   width: 100%;
   overflow-y: scroll;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  grid-template-rows: repeat(auto-fit, 64px);
+  grid-template-columns: 1fr 1fr 1fr;
+  @media ${device.desktop} {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  @media ${device.tablet} {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media ${device.mobile} {
+    grid-template-columns: 1fr;
+  }
+  grid-auto-rows: minmax(min-content, max-content);
   column-gap: 8px;
   row-gap: 8px;
   align-items: center;
@@ -88,16 +102,20 @@ const SearchResults = styled.div`
 `;
 
 const SearchResult = styled.div`
-  height: 64px;
+  height: 72px;
   width: 100%;
   min-width: 350px;
   display: grid;
   grid-template-rows: 1fr 1fr;
-  grid-template-columns: 64px auto 128px;
+  grid-template-columns: 72px auto 64px;
   font-size: 0.6em;
   grid-template-areas:
     "trackimage trackname options"
     "trackimage artist options";
+  @media ${device.mobile} {
+    min-width: 0px;
+    width: 100%;
+  }
 `;
 
 const SearchResultImg = styled.div`

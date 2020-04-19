@@ -1,5 +1,6 @@
-import React, { useEffect, useCallback, useState } from "react";
-import styled from "styled-components";
+import React, { useEffect, useCallback, useState, useRef } from "react";
+// @ts-ignore
+import ColorThief from "colorthief";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { device } from "../vars";
 import {
@@ -8,7 +9,7 @@ import {
   AlbumItem,
 } from "../services/AlbumService";
 import { useTypedSelector } from "../reducers/rootReducer";
-import { MillisToMinutesAndSeconds, trimLength } from "../utils";
+import { MillisToMinutesAndSeconds, trimLength, getContrast } from "../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "./ui/Button";
 import { playSong_epic } from "../reducers/playerReducer";
@@ -19,6 +20,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch } from "react-redux";
 import { addToQueue_epic } from "../reducers/queueReducer";
+import { styled } from "../customStyled";
+import { TextColor } from "../reducers/uiReducer";
 
 const AlbumViewWrapper = styled.div`
   position: fixed;
@@ -31,24 +34,35 @@ const AlbumViewWrapper = styled.div`
   width: 100%;
   height: 100%;
   z-index: 10;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.8);
 `;
 
-const AlbumViewModal = styled.div`
+interface ModalProps {
+  textColor: TextColor;
+  bgColor: string;
+}
+
+const AlbumViewModal = styled.div<ModalProps>`
   width: 90%;
   height: 90%;
-  background-color: white;
-  color: black;
+  background-color: ${(props) => props.bgColor};
+  color: ${(props) => props.textColor};
   z-index: 11;
   display: grid;
   grid-template-rows: 192px 42px calc(100% - 42px - 192px);
+  @media ${device.mobile} {
+    width: 100%;
+    height: 100%;
+  }
   @media ${device.desktop} {
     width: 70%;
+    height: 70%;
     margin-left: auto;
     margin-right: auto;
   }
   @media ${device.uhd} {
     width: 50%;
+    height: 60%;
     margin-left: auto;
     margin-right: auto;
   }
@@ -109,13 +123,20 @@ const AlbumTrackSpacer = styled.div`
 
 const ESCAPE_KEY = 27;
 
-const AlbumView: React.FC<RouteComponentProps<{ albumId: string }>> = ({
+interface AlbumViewProps {
+  albumId: string;
+}
+
+const AlbumView: React.FC<RouteComponentProps<AlbumViewProps>> = ({
   history,
   match,
 }) => {
   const dispatch = useDispatch();
   const token = useTypedSelector((state) => state.auth.token);
   const queueItems = useTypedSelector((state) => state.queue.queueItems);
+  const [bgColor, setBgColor] = useState([255, 255, 255]);
+  const [textColor, setTextColor] = useState<TextColor>("#000000");
+  const imgRef = useRef<HTMLImageElement>(null);
   const escListener = useCallback(
     (event: KeyboardEvent) => {
       switch (event.keyCode) {
@@ -149,6 +170,24 @@ const AlbumView: React.FC<RouteComponentProps<{ albumId: string }>> = ({
     },
     [dispatch]
   );
+
+  const imageCb = useCallback(() => {
+    // @ts-ignore
+    if (imgRef !== null && imgRef.current !== null) {
+      try {
+        const colorThief = new ColorThief();
+        // @ts-ignore
+        const [r, g, b]: [number, number, number] = colorThief.getColor(
+          imgRef.current,
+          50
+        );
+        const textColor = getContrast(r, g, b);
+        setBgColor([r, g, b]);
+        setTextColor(textColor);
+      } catch {}
+    }
+  }, []);
+
   return (
     <AlbumViewWrapper
       id="album-wrapper"
@@ -162,11 +201,17 @@ const AlbumView: React.FC<RouteComponentProps<{ albumId: string }>> = ({
       }}
     >
       {albumData !== null && (
-        <AlbumViewModal>
+        <AlbumViewModal
+          bgColor={`rgb(${bgColor[0]}, ${bgColor[1]}, ${bgColor[2]})`}
+          textColor={textColor}
+        >
           <AlbumHeader>
             <AlbumImage
               src={albumData.images.find((image) => image.height === 300)?.url}
               alt={albumData.name}
+              crossOrigin="anonymous"
+              ref={imgRef}
+              onLoad={imageCb}
             />
             <AlbumInfo>
               <div>
@@ -181,7 +226,8 @@ const AlbumView: React.FC<RouteComponentProps<{ albumId: string }>> = ({
             </AlbumInfo>
             <div>
               <Button
-                style={{ color: "black" }}
+                animate={false}
+                style={{ color: textColor }}
                 onClick={() => {
                   history.goBack();
                 }}
@@ -201,14 +247,16 @@ const AlbumView: React.FC<RouteComponentProps<{ albumId: string }>> = ({
                 <TrackOptions>
                   {queueItems.length === 0 && (
                     <Button
-                      style={{ color: "black" }}
+                      animate={false}
+                      style={{ color: textColor }}
                       onClick={() => dispatch(playSong_epic(item.uri, item.id))}
                     >
                       <FontAwesomeIcon icon={faPlay} />
                     </Button>
                   )}
                   <Button
-                    style={{ color: "black" }}
+                    animate={false}
+                    style={{ color: textColor }}
                     onClick={() => {
                       que(item);
                     }}
