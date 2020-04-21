@@ -6,7 +6,7 @@ import { setBgColor, setTextColor } from "../reducers/uiReducer";
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "../reducers/rootReducer";
 import { AppDispatch } from "../configureStore";
-import { getContrast, trimLength, MillisToMinutesAndSeconds } from "../utils";
+import { getTextColor, trimLength, FormattedTime } from "../utils";
 import { styled } from "../customStyled";
 import { imageWidth, imageHeight, msWidth } from "../vars";
 import {
@@ -166,7 +166,7 @@ export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
             // @ts-ignore
             const color = colorThief.getColor(imgRef.current, 50);
             dispatch(setBgColor(`rgb(${color[0]},${color[1]},${color[2]})`));
-            dispatch(setTextColor(getContrast(color[0], color[1], color[2])));
+            dispatch(setTextColor(getTextColor(color[0], color[1], color[2])));
           }
         }}
       />
@@ -189,7 +189,7 @@ export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
           <Player />
         </PlaybackControls>
         <CurrentMs>
-          <MillisToMinutesAndSeconds value={currentMs} />
+          <FormattedTime value={currentMs} />
         </CurrentMs>
         <ProgressBar
           max="100"
@@ -199,7 +199,7 @@ export const NowPlaying: React.FC<Props> = ({ imgRef }) => {
           ).toFixed(0)}
         />
         <DurationMs>
-          <MillisToMinutesAndSeconds value={songData?.duration_ms || 0} />
+          <FormattedTime value={songData?.duration_ms || 0} />
         </DurationMs>
       </SongData>
     </NowPlayingWrapper>

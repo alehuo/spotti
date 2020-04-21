@@ -2,7 +2,7 @@ import React from "react";
 import { useTypedSelector } from "../reducers/rootReducer";
 import { styled } from "../customStyled";
 import { TrackItem } from "../services/SearchService";
-import { MillisToMinutesAndSeconds, trimLength } from "../utils";
+import { FormattedTime, trimLength } from "../utils";
 
 const QueueTitle = styled.div`
   height: 32px;
@@ -81,7 +81,7 @@ export const Queue: React.FC = () => {
                     )}
                   </div>
                   <div>
-                    ( - <MillisToMinutesAndSeconds value={queueItem.seek} /> )
+                    ( - <FormattedTime value={queueItem.seek} /> )
                   </div>
                 </QueueItemContentWrapper>
               </QueueItem>

@@ -9,7 +9,7 @@ import {
   AlbumItem,
 } from "../services/AlbumService";
 import { useTypedSelector } from "../reducers/rootReducer";
-import { MillisToMinutesAndSeconds, trimLength, getContrast } from "../utils";
+import { FormattedTime, trimLength, getTextColor } from "../utils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "./ui/Button";
 import { playSong_epic } from "../reducers/playerReducer";
@@ -142,8 +142,8 @@ const AlbumView: React.FC<RouteComponentProps<AlbumViewProps>> = ({
   const queueItems = useTypedSelector((state) => state.queue.queueItems);
   const [bgColor, setBgColor] = useState([255, 255, 255]);
   const [textColor, setTextColor] = useState<TextColor>("#000000");
-  const imgRef = useRef<HTMLImageElement>(null);
-  const escListener = useCallback(
+  const imgRef = useRef<HTMLImageElement | null>(null);
+  const keyDownListener = useCallback(
     (event: KeyboardEvent) => {
       switch (event.keyCode) {
         case ESCAPE_KEY:
@@ -154,11 +154,11 @@ const AlbumView: React.FC<RouteComponentProps<AlbumViewProps>> = ({
     [history]
   );
   useEffect(() => {
-    document.addEventListener("keydown", escListener);
+    document.addEventListener("keydown", keyDownListener);
     return () => {
-      document.removeEventListener("keydown", escListener);
+      document.removeEventListener("keydown", keyDownListener);
     };
-  }, [escListener]);
+  }, [keyDownListener]);
   const [albumData, setAlbumData] = useState<AlbumResponse | null>(null);
   useEffect(() => {
     getAlbumInfo(token, match.params.albumId).then((res) => {
@@ -187,7 +187,7 @@ const AlbumView: React.FC<RouteComponentProps<AlbumViewProps>> = ({
           imgRef.current,
           50
         );
-        const textColor = getContrast(r, g, b);
+        const textColor = getTextColor(r, g, b);
         setBgColor([r, g, b]);
         setTextColor(textColor);
       } catch {}
@@ -248,7 +248,7 @@ const AlbumView: React.FC<RouteComponentProps<AlbumViewProps>> = ({
               <AlbumTrack key={item.id} bgColor={textColor}>
                 <TrackName>{item.name}</TrackName>
                 <TrackDuration>
-                  <MillisToMinutesAndSeconds value={item.duration_ms} />
+                  <FormattedTime value={item.duration_ms} />
                 </TrackDuration>
                 <TrackOptions>
                   {queueItems.length === 0 && (
