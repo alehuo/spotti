@@ -158,6 +158,7 @@ const SearchSpacer = styled.div`
   grid-column: 1 / -1;
   position: sticky;
   top: 0;
+  font-size: 1.2em;
 `;
 
 export const Search: React.FC = () => {

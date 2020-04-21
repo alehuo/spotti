@@ -3,9 +3,14 @@ import { useTypedSelector } from "../reducers/rootReducer";
 import { styled } from "../customStyled";
 import { TrackItem } from "../services/SearchService";
 import { FormattedTime, trimLength } from "../utils";
+import { device } from "../vars";
 
 const QueueTitle = styled.div`
   height: 32px;
+  font-size: 1.2em;
+  @media ${device.mobile} {
+    font-weight: bold;
+  }
 `;
 
 const QueueWrapper = styled.div`

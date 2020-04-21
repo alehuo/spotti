@@ -5,6 +5,7 @@ import { AuthorizeLink } from "./ui/AuthorizeLink";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpotify, faGithub } from "@fortawesome/free-brands-svg-icons";
+import { device } from "../vars";
 
 const AuthorizeWrapper = styled.div`
   width: 100%;
@@ -13,6 +14,10 @@ const AuthorizeWrapper = styled.div`
   grid-row-start: span 4;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  @media ${device.mobile} {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+  }
 `;
 
 const ContentWrapper = styled.div`
@@ -26,7 +31,7 @@ const ContentWrapper = styled.div`
 `;
 
 const Link = styled.a`
-  color: ${props => props.theme.green1};
+  color: ${(props) => props.theme.green1};
   font-size: 14pt;
 `;
 
@@ -36,7 +41,11 @@ export const Authorize: React.FC = () => (
       <Logo>SPOTTI</Logo>
       <p>A Spotify webplayer.</p>
       <p>
-        <Link href="https://github.com/alehuo/spotify-web-dashboard" target="__blank" rel="noreferrer noopener">
+        <Link
+          href="https://github.com/alehuo/spotify-web-dashboard"
+          target="__blank"
+          rel="noreferrer noopener"
+        >
           <FontAwesomeIcon icon={faGithub} />
           &nbsp;&nbsp;Source code
         </Link>

@@ -42,11 +42,11 @@ const AppGrid = styled.div`
   @media ${device.mobile} {
     width: 100%;
     grid-template-columns: 1fr;
-    grid-template-rows: 160px 160px calc(100% - 160px - 160px);
+    grid-template-rows: 160px calc(100% - 160px - 180px) 180px ;
     grid-template-areas:
       "nowplaying"
-      "queue"
-      "search";
+      "search"
+      "queue";
   }
   @media ${device.desktop} {
     width: 70%;

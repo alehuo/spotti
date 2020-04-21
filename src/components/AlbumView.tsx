@@ -72,7 +72,7 @@ const AlbumViewModal = styled.div<ModalProps>`
 
 const AlbumHeader = styled.div`
   display: grid;
-  grid-template-columns: 192px calc(100% - 192px - 36px) 36px;
+  grid-template-columns: 192px calc(100% - 192px - 42px) 42px;
 `;
 
 const AlbumImage = styled.img`
@@ -125,6 +125,14 @@ const AlbumTrackSpacer = styled.div`
   display: flex;
   align-content: center;
   align-items: center;
+`;
+
+const CloseButtonWrapper = styled.div`
+  padding: 8px;
+  width: 100%;
+  height: 100%;
+  font-size: 0.6em;
+  text-align: center;
 `;
 
 const ESCAPE_KEY = 27;
@@ -230,7 +238,7 @@ const AlbumView: React.FC<RouteComponentProps<AlbumViewProps>> = ({
               </div>
               <div>Released on {albumData.release_date}</div>
             </AlbumInfo>
-            <div>
+            <CloseButtonWrapper>
               <Button
                 animate={false}
                 style={{ color: textColor }}
@@ -240,9 +248,11 @@ const AlbumView: React.FC<RouteComponentProps<AlbumViewProps>> = ({
               >
                 <FontAwesomeIcon icon={faTimes} />
               </Button>
-            </div>
+            </CloseButtonWrapper>
           </AlbumHeader>
-          <AlbumTrackSpacer>Tracks ({albumData.total_tracks})</AlbumTrackSpacer>
+          <AlbumTrackSpacer>
+            <b>Tracks ({albumData.total_tracks})</b>
+          </AlbumTrackSpacer>
           <AlbumTracks>
             {albumData.tracks.items.map((item) => (
               <AlbumTrack key={item.id} bgColor={textColor}>
