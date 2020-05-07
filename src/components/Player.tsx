@@ -98,7 +98,7 @@ export const Player: React.FC = () => {
   const initClient = useCallback(() => {
     // @ts-ignore
     const player = new Spotify.Player({
-      name: "Spotify Web Player",
+      name: "Spotti",
       getOAuthToken: (cb: (token: string) => void) => {
         cb(token);
       },

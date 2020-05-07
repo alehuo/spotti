@@ -10,16 +10,31 @@ This repository contains a Spotify Web Dashboard implementation, built with Reac
 - React.js
 - Styled Components
 - Redux + RxJS + redux-observable
-- Spotify Web SDK
+- Spotify Web API & Playback SDK
 
 ## Features
 
 - View the current track information
-- Adjust volume
-- Search for tracks
-- Play your own public & private playlists
-- Return / pause playback
-- Play music through Spotify Web Playback SDK (audio streams to web browser)
+- Adjust playback volume
+- Search for tracks & albums
+- View album tracks
+- Control playback status
+- Play music through the Spotify Web Playback SDK (audio streams to web browser)
+
+## Demo
+
+A working demo is hosted on https://spotti.alehuo.dev
+
+**Note: You will need a Spotify account with Premium subscription!**
+
+The application requires the following scopes: 
+
+- user-read-currently-playing
+- user-read-playback-state
+- streaming user-read-email 
+- user-read-private 
+- playlist-read-private 
+- user-modify-playback-state
 
 ## Installation instructions
 
