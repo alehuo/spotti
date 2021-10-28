@@ -99,7 +99,7 @@ export const Player: React.FC = () => {
     // @ts-ignore
     const player = new Spotify.Player({
       name: "Spotti",
-      getOAuthToken: (cb: (token: string) => void) => {
+      getOAuthToken: (cb: (_token: string) => void) => {
         cb(token);
       },
       volume: 0.5,
