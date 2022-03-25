@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Reducer, action, ActionType } from "typesafe-actions";
 import { TrackItem } from "../services/SearchService";
 

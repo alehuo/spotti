@@ -9,7 +9,7 @@ import { connectRouter } from "connected-react-router";
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 import { History } from "history";
 
-export type Reducer<T, K> = (state: T, action: K) => T;
+export type Reducer<T, K> = (_state: T, _action: K) => T;
 
 export const createRootReducer = (history: History) =>
   combineReducers({
